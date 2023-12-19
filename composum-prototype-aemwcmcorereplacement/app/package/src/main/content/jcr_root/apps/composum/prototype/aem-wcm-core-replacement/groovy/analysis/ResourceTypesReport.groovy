@@ -1,6 +1,8 @@
 import org.apache.sling.api.resource.Resource;
 
 void checkPath(String path) {
+    println("Path: " + path)
+
     Map<String, Integer> primtypes = new TreeMap();
     Map<String, Integer> mixins = new TreeMap();
     Map<String, Integer> restypes = new TreeMap();
@@ -42,4 +44,6 @@ void checkPath(String path) {
     }
 }
 
-checkPath("/content/wknd")
+// checkPath("/content/wknd")
+// checkPath("/content/dam/wknd")
+checkPath("/content/experience-fragments/wknd")

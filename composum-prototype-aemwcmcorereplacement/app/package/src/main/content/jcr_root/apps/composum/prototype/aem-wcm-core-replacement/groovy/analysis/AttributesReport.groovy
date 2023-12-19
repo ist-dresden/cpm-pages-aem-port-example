@@ -2,6 +2,8 @@ import org.apache.commons.lang3.tuple.Pair
 import org.apache.sling.api.resource.Resource
 
 void checkPath(String path) {
+    println("Path: " + path)
+
     checkQuery("/jcr:root" + path + "//*")
 }
 
@@ -47,4 +49,6 @@ void checkQuery(String query) {
     }
 }
 
-checkPath("/content/wknd")
+// checkPath("/content/wknd")
+// checkPath("/content/dam/wknd")
+checkPath("/content/experience-fragments/wknd")

@@ -1,4 +1,6 @@
-## Result of script execution https://stoerr.github.io/til/AdobeAEM/AnalyzeSite.html on /content/wknd:
+# Result of script execution https://stoerr.github.io/til/AdobeAEM/AnalyzeSite.html on /content/wknd etc:
+
+## Report on /content/wknd
 
 Primtypes:
 cq:LiveCopy	11
@@ -73,8 +75,10 @@ composum-ai/test/components/testdialog	1
 wknd/components/byline	1
 wknd/components/embed	1
 
-## Report on /content/dam/wknd
 
+
+
+## Report on /content/dam/wknd
 
 Primtypes:
 cq:Page	1
@@ -105,3 +109,68 @@ wcm-io/caconfig/editor/components/page/editor	1
 sling:resourceType sorted by count:
 	4355
 wcm-io/caconfig/editor/components/page/editor	1
+
+
+
+
+## Report on /content/experience-fragments/wknd
+
+Primtypes:
+cq:LiveCopy	6
+cq:Page	56
+cq:PageContent	56
+nt:unstructured	483
+sling:OrderedFolder	17
+
+
+Mixins:
+cq:LiveRelationship	65
+cq:LiveSync	6
+cq:LiveSyncCancelled	5
+mix:versionable	5
+
+
+sling:resourceType sorted by key:
+	314
+cq/experience-fragments/components/experiencefragment	21
+cq/experience-fragments/editor/components/buildingblock	19
+wknd/components/button	48
+wknd/components/byline	7
+wknd/components/container	79
+wknd/components/form/button	3
+wknd/components/form/hidden	3
+wknd/components/form/sign-in-buttons	1
+wknd/components/form/sign-in-form	3
+wknd/components/form/text	4
+wknd/components/image	11
+wknd/components/languagenavigation	1
+wknd/components/navigation	3
+wknd/components/search	1
+wknd/components/separator	17
+wknd/components/teaser	14
+wknd/components/text	9
+wknd/components/title	25
+wknd/components/xfpage	35
+
+
+sling:resourceType sorted by count:
+	314
+wknd/components/container	79
+wknd/components/button	48
+wknd/components/xfpage	35
+wknd/components/title	25
+cq/experience-fragments/components/experiencefragment	21
+cq/experience-fragments/editor/components/buildingblock	19
+wknd/components/separator	17
+wknd/components/teaser	14
+wknd/components/image	11
+wknd/components/text	9
+wknd/components/byline	7
+wknd/components/form/text	4
+wknd/components/form/button	3
+wknd/components/form/hidden	3
+wknd/components/form/sign-in-form	3
+wknd/components/navigation	3
+wknd/components/form/sign-in-buttons	1
+wknd/components/languagenavigation	1
+wknd/components/search	1
