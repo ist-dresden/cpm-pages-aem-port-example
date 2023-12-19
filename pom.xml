@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd ">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.composum.meta.ist</groupId>
+        <artifactId>parent-2</artifactId>
+        <version>1.7.1</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.composum.prototype</groupId>
+    <artifactId>composum-prototype-migrationexample</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>AEM to Pages migration example</name>
+    <description>Explorative AEM to Pages migration</description>
+
+    <properties>
+        <composum.nodes.version>4.2.1</composum.nodes.version>
+        <composum.platform.version>1.7.0</composum.platform.version>
+        <composum.pages.version>1.5.1</composum.pages.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Composum Pages -->
+            <dependency>
+                <groupId>com.composum.pages</groupId>
+                <artifactId>composum-pages-commons-bundle</artifactId>
+                <version>${composum.pages.version}</version>
+            </dependency>
+
+            <!-- Composum Core -->
+            <dependency>
+                <groupId>com.composum.nodes</groupId>
+                <artifactId>composum-nodes-commons</artifactId>
+                <version>${composum.nodes.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>composum-prototype-aemwcmcorereplacement</module>
+    </modules>
+</project>

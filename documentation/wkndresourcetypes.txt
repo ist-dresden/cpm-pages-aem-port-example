@@ -1,0 +1,107 @@
+## Result of script execution https://stoerr.github.io/til/AdobeAEM/AnalyzeSite.html on /content/wknd:
+
+Primtypes:
+cq:LiveCopy	11
+cq:Page	126
+cq:PageContent	127
+nt:file	29
+nt:folder	10
+nt:resource	29
+nt:unstructured	3319
+
+Mixins:
+cq:LiveRelationship	2280
+cq:LiveSync	11
+cq:PropertyLiveSyncCancelled	5
+dam:Thumbnails	1
+mix:versionable	89
+rep:CugMixin	3
+
+sling:resourceType sorted by key:
+	1403
+dam/cfm/components/grid	268
+wcm/foundation/components/responsivegrid	78
+wknd/components/accordion	3
+wknd/components/breadcrumb	49
+wknd/components/button	7
+wknd/components/byline	1
+wknd/components/carousel	52
+wknd/components/container	499
+wknd/components/contentfragment	214
+wknd/components/download	6
+wknd/components/embed	1
+wknd/components/experiencefragment	46
+wknd/components/image	333
+wknd/components/image-list	30
+wknd/components/list	22
+wknd/components/page	123
+wknd/components/separator	43
+wknd/components/sharing	70
+wknd/components/tabs	52
+wknd/components/teaser	42
+wknd/components/text	60
+wknd/components/title	242
+
+
+sling:resourceType sorted by count:
+	1403
+wknd/components/container	499
+wknd/components/image	333
+dam/cfm/components/grid	268
+wknd/components/title	242
+wknd/components/contentfragment	214
+wknd/components/page	123
+wcm/foundation/components/responsivegrid	78
+wknd/components/sharing	70
+wknd/components/text	60
+wknd/components/carousel	52
+wknd/components/tabs	52
+wknd/components/breadcrumb	49
+wknd/components/experiencefragment	46
+wknd/components/separator	43
+wknd/components/teaser	42
+wknd/components/image-list	30
+wknd/components/list	22
+wknd/components/button	7
+wknd/components/download	6
+wknd/components/accordion	3
+composum/aem/microsite	2
+wcm-io/caconfig/editor/components/page/editor	2
+composum-ai/components/contentcreation	1
+composum-ai/components/sidepanel-ai	1
+composum-ai/test/components/testdialog	1
+wknd/components/byline	1
+wknd/components/embed	1
+
+## Report on /content/dam/wknd
+
+
+Primtypes:
+cq:Page	1
+cq:PageContent	1
+dam:Asset	155
+dam:AssetContent	155
+nt:file	695
+nt:folder	132
+nt:resource	105
+nt:unstructured	2521
+oak:Resource	557
+sling:Folder	34
+
+
+Mixins:
+cq:ReplicationStatus	2
+cq:Taggable	178
+dam:cfVariationNode	2
+mix:referenceable	141
+mix:versionable	122
+
+
+sling:resourceType sorted by key:
+	4355
+wcm-io/caconfig/editor/components/page/editor	1
+
+
+sling:resourceType sorted by count:
+	4355
+wcm-io/caconfig/editor/components/page/editor	1
