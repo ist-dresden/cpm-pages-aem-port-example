@@ -22,3 +22,37 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# filesystem
+.crossref-*
+.local-*
+local-*
+
+# IntelliJ
+.idea
+*.iml
+
+# Eclipse
+.project
+.classpath
+.settings
+.metadata
+Servers
+
+# Gradle
+.gradle
+build
+
+# Maven
+target
+
+# some source repos
+.svn
+
+# File Vault
+.vlt
+.vlt-sync*
+
+# Mac OS X
+._*
+.DS_*
