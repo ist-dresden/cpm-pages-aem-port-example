@@ -26,8 +26,9 @@ void changePrimaryTypes(String path, String originalPrimaryType, String newPrima
 }
 
 try {
-    changePrimaryTypes("/content/wknd", "cq:Page", "cpp:Page");
-    changePrimaryTypes("/content/wknd", "cq:PageContent", "cpp:PageContent");
+    changePrimaryTypes("/content/wknd-cpm", "cq:Page", "cpp:Page");
+    changePrimaryTypes("/content/wknd-cpm", "cq:PageContent", "cpp:PageContent");
+    resourceResolver.getResource("/content/wknd").adaptTo(ModifiableValueMap.class).put("jcr:primaryType", "cpp:Page");
     resourceResolver.commit();
     println("Migration done.")
 } catch (Exception e) {
