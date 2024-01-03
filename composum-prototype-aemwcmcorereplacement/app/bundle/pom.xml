@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,7 +13,9 @@
     <packaging>bundle</packaging>
 
     <name>Partial AEM Core Replacement App Bundle</name>
-    <description>App bundle for composum-prototype-aemwcmcorereplacement. Explorative partial replacement for the aem core wcm components in a migration from AEM to Composum Pages</description>
+    <description>App bundle for composum-prototype-aemwcmcorereplacement. Explorative partial replacement for the aem
+        core wcm components in a migration from AEM to Composum Pages
+    </description>
 
     <properties>
         <bundle.name>composum.prototype.aem-wcm-core-replacement.bundle</bundle.name>
@@ -39,8 +42,10 @@
                         <Import-Package>org.apache.sling.api.resource.*;version="[2.8.0,3)",
                             org.apache.sling.api.*;version="[2.2.2,3)",
                             javax.annotation.*;version="[0,4)",
-                            *</Import-Package>
-                        <Sling-Model-Packages>composum.prototype.aemwcmcorereplacement.*</Sling-Model-Packages>
+                            *
+                        </Import-Package>
+                        <Sling-Model-Packages>composum.prototype.aemwcmcorereplacement.model.*</Sling-Model-Packages>
+                        <Private-Package>composum.prototype.aemwcmcorereplacement.impl.*</Private-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -84,7 +89,23 @@
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- Java Annotations -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+
+        <!-- OSGI -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.cmpn</artifactId>
         </dependency>
 
     </dependencies>
