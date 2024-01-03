@@ -16,14 +16,16 @@ try {
     def pathList = [
         "/content/wknd-cpm"
     ];
+    println("Migrating " + pathList.size() + " trees...");
     pathList.each { path ->
         def resource = resourceResolver.getResource(path);
         service.migrateResourceTree(resource, out);
     }
-    resourceResolver.revert();
+    println("Starting commit.")
+    // resourceResolver.revert();
     resourceResolver.commit();
     println("Migration done.")
-} catch (Exception e) {
+} catch (Throwable e) {
     println("Migration failed because of " + e);
     println(e.getCause());
     resourceResolver.revert();
