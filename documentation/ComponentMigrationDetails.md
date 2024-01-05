@@ -4,13 +4,18 @@ The WKND components are mostly thin wrappers around the wcm.core.components, so 
 [their documentation](https://github.com/adobe/aem-core-wcm-components)
 to see what needs to be migrated.
 
+FIXME: generally what to do about cq:styleIds ?
+
 ## General migration
 
 In all components we need to replace the sling:resourceType with the corresponding Composum Pages component.
 
 ## Text component
 
-wknd/components/text -> composum/pages/components/element/text
+wknd/components/text -> core/wcm/components/text/v2/text
+replaced by
+composum/prototype/aem-wcm-core-replacement/components/text ->
+composum/pages/components/element/text
 
 https://github.com/ist-dresden/composum-pages/tree/develop/components/package/src/main/content/jcr_root/libs/composum/pages/components/element/text
 vs.
@@ -21,7 +26,10 @@ convert the text to HTML, as there is no such equivalent at Pages.
 
 ## Title component
 
-wknd/components/title -> composum/pages/components/element/title
+wknd/components/title -> core/wcm/components/title/v3/title
+replaced by
+composum/prototype/aem-wcm-core-replacement/components/parsys ->
+composum/pages/components/element/title
 
 https://github.com/ist-dresden/composum-pages/tree/develop/components/package/src/main/content/jcr_root/libs/composum/pages/components/element/title
 vs.
@@ -35,5 +43,31 @@ AEM:
 ./id - defines the component HTML ID attribute.
 ./linkAccessibilityLabel - defines an accessibility label for the the title's link.
 ./linkTitleAttribute - defines a title attribute for the the title's link.
+
+Pages extension?
+
+Unsolved problem: refers to component policy for fallback.
+
+## Container component
+
+wknd/components/container -> core/wcm/components/container/v1/container
+replaced by
+composum/prototype/aem-wcm-core-replacement/components/parsys ->
+composum/pages/components/container/parsys
+
+https://github.com/adobe/aem-core-wcm-components/tree/main/content/src/content/jcr_root/apps/core/wcm/components/container/v1/container
+vs.
+https://github.com/ist-dresden/composum-pages/tree/develop/components/package/src/main/content/jcr_root/libs/composum/pages/components/container/parsys
+
+Composum: no properties. Layout normally with rows and columns
+AEM properties:
+./layout - defines the layout type, either simple (default) or responsiveGrid; if no value is defined, the component will fallback to the value defined by the component's policy
+Common Properties
+./backgroundImageReference - defines the container background image.
+./backgroundColor - defines the container background color.
+./id - defines the component HTML ID attribute.
+Accessibility
+./accessibilityLabel - defines an accessibility label for the container.
+./roleAttribute - defines a role attribute for the container.
 
 Unsolved problem: refers to component policy for fallback.

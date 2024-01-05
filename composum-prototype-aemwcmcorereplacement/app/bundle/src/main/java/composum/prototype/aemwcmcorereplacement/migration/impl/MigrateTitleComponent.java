@@ -32,8 +32,9 @@ public class MigrateTitleComponent extends AbstractAemWcmCoreMigrationMethod {
 
     @Override
     public boolean migrate(Resource resource, PrintWriter log) {
-        if (replaceResourceType(resource, "wknd/components/title", "composum/pages/components/element/title")) {
-            LOG.debug("Migrating {} to composum/pages/components/element/title", resource.getPath());
+        if (replaceResourceType(resource, "wknd/components/title",
+                "composum/prototype/aem-wcm-core-replacement/components/title")) {
+            LOG.debug("MigrateTitleComponent.migrate({})", resource.getPath());
             log.println("MigrateTitleComponent.migrate(" + resource.getPath() + ")");
             log.flush();
             resource.adaptTo(ModifiableValueMap.class).put("title", resource.getValueMap().get("jcr:title", ""));

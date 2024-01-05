@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import composum.prototype.aemwcmcorereplacement.migration.AemWcmCoreMigrationMethod;
 
 /**
- * Migrates wknd/components/text -> composum/pages/components/element/text  .
+ * Migrates wknd/components/text -> composum/prototype/aem-wcm-core-replacement/components/text based on composum/pages/components/element/text  .
  * <p>
  * The AEM component has an attribute text that can be kept as is if textIsRich is set to true. Otherwise, we need to
  * convert the text to HTML, as there is no such equivalent at Pages.
@@ -23,8 +23,9 @@ public class MigrateTextComponent extends AbstractAemWcmCoreMigrationMethod {
 
     @Override
     public boolean migrate(Resource resource, PrintWriter log) {
-        if (replaceResourceType(resource, "wknd/components/text", "composum/pages/components/element/text")) {
-            LOG.debug("Migrating {} to composum/pages/components/element/text", resource.getPath());
+        if (replaceResourceType(resource, "wknd/components/text",
+                "composum/prototype/aem-wcm-core-replacement/components/text")) {
+            LOG.debug("MigrateTextComponent.migrate({})", resource.getPath());
             log.println("MigrateTextComponent.migrate(" + resource.getPath() + ")");
             log.flush();
             // handle textIsRich=false
