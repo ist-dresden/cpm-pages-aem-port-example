@@ -2,7 +2,6 @@ package composum.prototype.aemwcmcorereplacement.migration.impl;
 
 import java.io.PrintWriter;
 
-import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
@@ -23,6 +22,7 @@ import composum.prototype.aemwcmcorereplacement.migration.AemWcmCoreMigrationMet
  *      <li>./linkTitleAttribute - defines a title attribute for the the title's link.</li>
  * </ul>
  * </p>
+ *
  * @see "https://github.com/adobe/aem-core-wcm-components/tree/main/content/src/content/jcr_root/apps/core/wcm/components/title/v3/title"
  */
 @Component(service = AemWcmCoreMigrationMethod.class)
@@ -37,10 +37,11 @@ public class MigrateTitleComponent extends AbstractAemWcmCoreMigrationMethod {
             LOG.debug("MigrateTitleComponent.migrate({})", resource.getPath());
             log.println("MigrateTitleComponent.migrate(" + resource.getPath() + ")");
             log.flush();
-            resource.adaptTo(ModifiableValueMap.class).put("title", resource.getValueMap().get("jcr:title", ""));
+            renameAttribute(resource, "jcr:title", "title");
             // FIXME(hps,04.01.24) implement the other attributes as well
             return true;
         }
         return false;
     }
+
 }

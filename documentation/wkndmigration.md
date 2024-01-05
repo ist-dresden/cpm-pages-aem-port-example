@@ -17,7 +17,7 @@ see wkndresourcetypes.txt and wkndattributes.txt
 ## Migration of primary types
 
 The following primary types correspond, and can be migrated by the
-[MigratePrimaryTypes](../composum-prototype-aemwcmcorereplacement/app/package/src/main/content/jcr_root/apps/composum/prototype/aem-wcm-core-replacement/groovy/MigratePrimaryTypes.groovy)
+[MigratePrimaryTypes](../composum-prototype-aemwcmcorereplacement/app/package/src/main/content/jcr_root/apps/composum/prototype/aem-wcm-core-replacement/groovy/1MigratePrimaryTypes.groovy)
 script. A Sling quirk is that you have to do an addMixin for mix:versionable before setting cpp:PageContent since
 setting the primary type doesn't add the necessary attributes for versioning (cpp:PageContent is versionable, cq not).
 
@@ -55,7 +55,7 @@ wknd/components/container -> composum/pages/components/container/parsys
 wknd/components/title -> composum/pages/components/element/title
 wknd/components/text -> composum/pages/components/element/text
 wknd/components/image -> composum/pages/components/element/image
-wknd/components/experiencefragment -> new component? reference?
+wknd/components/experiencefragment -> composum/pages/components/element/reference
 wknd/components/contentfragment -> new component? reference?
 wknd/components/xfpage -> new component that just renders the root of the experience fragment
 

@@ -1,5 +1,7 @@
 package composum.prototype.aemwcmcorereplacement.migration.impl;
 
+import java.util.Objects;
+
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.Resource;
 
@@ -17,10 +19,19 @@ public abstract class AbstractAemWcmCoreMigrationMethod implements AemWcmCoreMig
      */
     protected boolean replaceResourceType(Resource resource, String oldResourceType, String newResourceType) {
         if (resource.getResourceType().equals(oldResourceType)) {
-            resource.adaptTo(ModifiableValueMap.class).put("sling:resourceType", newResourceType);
+            Objects.requireNonNull(resource.adaptTo(ModifiableValueMap.class))
+                    .put("sling:resourceType", newResourceType);
             return true;
         }
         return false;
+    }
+
+    protected void renameAttribute(Resource resource, String oldName, String newName) {
+        ModifiableValueMap properties = Objects.requireNonNull(resource.adaptTo(ModifiableValueMap.class));
+        if (properties.containsKey(oldName)) {
+            properties.put(newName, properties.get(oldName, ""));
+            properties.remove(oldName);
+        }
     }
 
 }

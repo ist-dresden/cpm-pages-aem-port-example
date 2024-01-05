@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,7 +13,47 @@
     <packaging>content-package</packaging>
 
     <name>Partial AEM Core Replacement Content</name>
-    <description>App package for composum-prototype-aemwcmcorereplacement. Explorative partial replacement for the aem core wcm components in a migration from AEM to Composum Pages</description>
+    <description>App package for composum-prototype-aemwcmcorereplacement. Explorative partial replacement for the aem
+        core wcm components in a migration from AEM to Composum Pages
+    </description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>composum-prototype-aemwcmcorereplacement-app-bundle</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Composum Pages -->
+        <dependency>
+            <groupId>com.composum.pages</groupId>
+            <artifactId>composum-pages-commons-bundle</artifactId>
+        </dependency>
+
+        <!-- Composum Core -->
+        <dependency>
+            <groupId>com.composum.nodes</groupId>
+            <artifactId>composum-nodes-commons</artifactId>
+        </dependency>
+
+        <!-- Taglib support -->
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.scripting.jsp.taglib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
+        <!-- other dependencies -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+    </dependencies>
 
     <build>
         <resources>
@@ -98,37 +139,7 @@
 
         </plugins>
     </build>
-    <dependencies>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>composum-prototype-aemwcmcorereplacement-app-bundle</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- Composum Pages -->
-        <dependency>
-            <groupId>com.composum.pages</groupId>
-            <artifactId>composum-pages-commons-bundle</artifactId>
-        </dependency>
-
-        <!-- Composum Core -->
-        <dependency>
-            <groupId>com.composum.nodes</groupId>
-            <artifactId>composum-nodes-commons</artifactId>
-        </dependency>
-
-        <!-- Taglib support -->
-        <dependency>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.scripting.jsp.taglib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-        </dependency>
-
-    </dependencies>
     <profiles>
 
         <profile>

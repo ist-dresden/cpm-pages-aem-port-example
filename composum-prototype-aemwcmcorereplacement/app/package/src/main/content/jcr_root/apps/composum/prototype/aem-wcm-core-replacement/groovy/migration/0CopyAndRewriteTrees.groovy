@@ -8,7 +8,7 @@ import org.apache.sling.api.resource.Resource
 // a list of subtrees to copy including their destination
 List<Pair<String, String>> subtrees = new ArrayList<Pair<String, String>>();
 subtrees.add(Pair.of("/content/wknd/language-masters/en", "/content/wknd-cpm/language-masters/en"));
-// subtrees.add(Pair.of("/content/experience-fragments/wknd/language-masters/en", "/content/wknd-cpm/experience-fragments/language-masters/en")); // doubtful location
+subtrees.add(Pair.of("/content/experience-fragments/wknd/language-masters/en", "/content/wknd-cpm/experience-fragments/language-masters/en")); // doubtful location
 // subtrees.add(Pair.of("/content/dam/wknd/en", "/content/wknd-cpm/assets/en"));
 
 // Create the parents as sling:OrderedFolder nodes if they aren't already there.

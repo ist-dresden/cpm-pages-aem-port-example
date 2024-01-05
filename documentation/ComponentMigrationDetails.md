@@ -71,3 +71,16 @@ Accessibility
 ./roleAttribute - defines a role attribute for the container.
 
 Unsolved problem: refers to component policy for fallback.
+
+## Experience Fragment
+
+wknd/components/experiencefragment -> core/wcm/components/experiencefragment/v1/experiencefragment
+composum/pages/components/element/reference
+
+AEM Properties:
+./fragmentVariationPath - defines the path to the experience fragment variation to be rendered.
+./id - defines the component HTML ID attribute.
+
+https://github.com/adobe/aem-core-wcm-components/tree/main/content/src/content/jcr_root/apps/core/wcm/components/experiencefragment/v2/experiencefragment
+vs.
+https://github.com/ist-dresden/composum-pages/tree/develop/components/package/src/main/content/jcr_root/libs/composum/pages/components/container/parsys
