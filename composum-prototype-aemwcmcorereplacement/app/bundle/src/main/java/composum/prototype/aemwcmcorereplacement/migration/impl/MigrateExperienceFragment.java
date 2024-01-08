@@ -32,6 +32,7 @@ public class MigrateExperienceFragment extends AbstractAemWcmCoreMigrationMethod
             LOG.debug("MigrateExperienceFragment.migrate({})", resource.getPath());
             log.println("MigrateExperienceFragment.migrate(" + resource.getPath() + ")");
             log.flush();
+            migrateCommonAttributes(resource, log);
             String fragmentVariationPath = resource.getValueMap().get("fragmentVariationPath", "");
             String contentReferencePath = fragmentVariationPath + "/jcr:content/root";
             resource.adaptTo(org.apache.sling.api.resource.ModifiableValueMap.class).put("contentReference", contentReferencePath);

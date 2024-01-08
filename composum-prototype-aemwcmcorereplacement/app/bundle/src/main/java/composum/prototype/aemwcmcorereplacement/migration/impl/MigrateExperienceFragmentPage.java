@@ -24,6 +24,7 @@ public class MigrateExperienceFragmentPage extends AbstractAemWcmCoreMigrationMe
             LOG.debug("MigrateExperienceFragmentPage.migrate({})", resource.getPath());
             log.println("MigrateExperienceFragmentPage.migrate(" + resource.getPath() + ")");
             log.flush();
+            migrateCommonAttributes(resource, log);
             return true;
         }
         return false;

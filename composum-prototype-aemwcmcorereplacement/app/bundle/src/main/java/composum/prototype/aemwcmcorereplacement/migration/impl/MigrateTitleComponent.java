@@ -37,6 +37,7 @@ public class MigrateTitleComponent extends AbstractAemWcmCoreMigrationMethod {
             LOG.debug("MigrateTitleComponent.migrate({})", resource.getPath());
             log.println("MigrateTitleComponent.migrate(" + resource.getPath() + ")");
             log.flush();
+            migrateCommonAttributes(resource, log);
             renameAttribute(resource, "jcr:title", "title");
             // FIXME(hps,04.01.24) implement the other attributes as well
             return true;

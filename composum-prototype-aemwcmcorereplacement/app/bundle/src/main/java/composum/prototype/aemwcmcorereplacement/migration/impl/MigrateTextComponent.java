@@ -28,6 +28,7 @@ public class MigrateTextComponent extends AbstractAemWcmCoreMigrationMethod {
             LOG.debug("MigrateTextComponent.migrate({})", resource.getPath());
             log.println("MigrateTextComponent.migrate(" + resource.getPath() + ")");
             log.flush();
+            migrateCommonAttributes(resource, log);
             // handle textIsRich=false
             if (!resource.getValueMap().get("textIsRich", false)) {
                 String text = resource.getValueMap().get("text", "");

@@ -63,6 +63,7 @@ public class MigrateImageComponent extends AbstractAemWcmCoreMigrationMethod {
             LOG.debug("MigrateImageComponent.migrate({})", resource.getPath());
             log.println("MigrateImageComponent.migrate(" + resource.getPath() + ")");
             log.flush();
+            migrateCommonAttributes(resource, log);
             ModifiableValueMap mvm = resource.adaptTo(ModifiableValueMap.class);
             String fileReference = mvm.get("fileReference", "");
             boolean migrated = false;

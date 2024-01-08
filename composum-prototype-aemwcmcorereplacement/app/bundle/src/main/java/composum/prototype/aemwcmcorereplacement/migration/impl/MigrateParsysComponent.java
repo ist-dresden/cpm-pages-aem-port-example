@@ -34,6 +34,7 @@ public class MigrateParsysComponent extends AbstractAemWcmCoreMigrationMethod {
             LOG.debug("MigrateParsysComponent.migrate({})", resource.getPath());
             log.println("MigrateParsysComponent.migrate(" + resource.getPath() + ")");
             log.flush();
+            migrateCommonAttributes(resource, log);
             // FIXME(hps,04.01.24) implement the other attributes as well
             return true;
         }
