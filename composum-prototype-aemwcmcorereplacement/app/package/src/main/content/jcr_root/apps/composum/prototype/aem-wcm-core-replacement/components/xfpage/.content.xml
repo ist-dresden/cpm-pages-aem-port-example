@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:cpp="http://sling.composum.com/pages/1.0"
+          xmlns:jcr="http://www.jcp.org/jcr/1.0"
+          xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          jcr:primaryType="cpp:Component"
+          sling:resourceSuperType="composum/pages/components/page/home"
+          jcr:title="Experience Fragment Page"
+          jcr:description="A special page for editing experience fragments - it is not itself rendered as a page in the site."
+          category="[Special]"
+          componentType="cpp:Container">
+</jcr:root>

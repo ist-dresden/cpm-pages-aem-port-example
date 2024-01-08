@@ -17,6 +17,7 @@ import composum.prototype.aemwcmcorereplacement.migration.AemWcmCoreMigrationMet
  *     <li>./fragmentVariationPath - defines the path to the experience fragment variation to be rendered.</li>
  *     <li>./id - defines the component HTML ID attribute.</li>
  * </ul>
+ *
  * @see "https://github.com/adobe/aem-core-wcm-components/tree/main/content/src/content/jcr_root/apps/core/wcm/components/title/v3/title"
  */
 @Component(service = AemWcmCoreMigrationMethod.class)
@@ -31,7 +32,13 @@ public class MigrateExperienceFragment extends AbstractAemWcmCoreMigrationMethod
             LOG.debug("MigrateExperienceFragment.migrate({})", resource.getPath());
             log.println("MigrateExperienceFragment.migrate(" + resource.getPath() + ")");
             log.flush();
-            renameAttribute(resource, "fragmentVariationPath", "contentReference");
+            String fragmentVariationPath = resource.getValueMap().get("fragmentVariationPath", "");
+            String contentReferencePath = fragmentVariationPath + "/jcr:content/root";
+            resource.adaptTo(org.apache.sling.api.resource.ModifiableValueMap.class).put("contentReference", contentReferencePath);
+            if (resource.getResourceResolver().getResource(contentReferencePath) == null) {
+                log.println("ERROR: MigrateExperienceFragment.migrate(" + resource.getPath() + ") contentReferencePath " + contentReferencePath + " does not exist!");
+                log.flush();
+            }
             return true;
         }
         return false;
