@@ -74,6 +74,8 @@ Accessibility
 
 Unsolved problem: refers to component policy for fallback.
 
+FIXME: migrate cq:responsive child node.
+
 ## Experience Fragment
 
 wknd/components/experiencefragment -> core/wcm/components/experiencefragment/v1/experiencefragment
@@ -98,3 +100,44 @@ replaced by
 composum/prototype/aem-wcm-core-replacement/components/xfpage -> composum/pages/components/page/home
 
 Special page type to edit experience fragments. Not used in rendering.
+
+## Image
+
+wknd/components/image -> core/wcm/components/image/v3/image
+replaced by
+composum/prototype/aem-wcm-core-replacement/components/image -> composum/pages/components/element/image
+
+Composum properties: imageRef, title, alt, copyright, copyrightUrl, license, licenseUrl
+
+AEM properties:
+./fileReference property or file child node - will store either a reference to the image file, or the image file
+./isDecorative - if set to true, then the image will be ignored by assistive technology
+./alt - defines the value of the HTML alt attribute (not needed if ./isDecorative is set to true)
+./altValueFromDAM - if true, the HTML alt attribute is inherited from the DAM asset.
+./linkURL - allows defining a URL to which the image will link to
+./jcr:title - defines the value of the HTML title attribute or the value of the caption, depending on the value of
+./displayPopupTitle - if set to true it will render the value of the ./jcr:title property through the HTML title
+attribute, otherwise a caption will be rendered
+./id - defines the component HTML ID attribute.
+./dmPresetType - defines the type of Dynamic Media image rendering, possible values are imagePreset, smartCrop.
+./imagePreset - defines the name for the Dynamic Media Image Preset to apply to the Dynamic Media image URL.
+./smartCropRendition - defines how Dynamic Media Smart Crop image renders. SmartCrop:Auto means that the component will
+automatically select Smart Crop rendition which fits the container size better; the name of specific Smart Crop
+rendition will force the component to render that image rendition only.
+./imageModifiers - defines additional Dynamic Media Image Serving commands separated by '&'. Field gives complete
+flexibility to change Dynamic Media image rendering.
+./imageFromPageImage - if true, the image is inherited from the featured image of either the linked page if ./linkURL is
+set or the current page.
+./altValueFromPageImage - if true and if ./imageFromPageImage is true, the HTML alt attribute is inherited from the
+featured image of either the linked page if ./linkURL is set or the current page.
+./disableLazyLoading - if true the lazy loading of the image is disabled regardless of the lazy loading setting in the
+design policy.
+
+Really used in WKND: fileReference (100%), altValueFromDAM (60%), displayPopupTitle (60%), isDecorative (60%),
+titleValueFromDAM (60%), imageCrop (9%), jcr:title (5%), alt (3%), cq:panelTitle (2%)
+
+Shortcut for now: migrate fileReference to the jcr:content/renditions/original , 
+alt stays as it is, if displayPopupTitle is true, migrate jcr:title as alt, otherwise as title.
+
+FIXME: migrate using assets. But first migrate as picture to get it running quick.
+Unsolved problem: refers to component policy for fallback.
