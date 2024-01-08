@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 import composum.prototype.aemwcmcorereplacement.migration.AemWcmCoreMigrationMethod;
 
 /**
- * Migrates wknd/components/parsys -> composum/prototype/aem-wcm-core-replacement/components/parsys .
+ * Migrates wknd/components/parsys -> composum/prototype/aem-wcm-core-replacement/components/parsys ,
+ * and dam/cfm/components/grid and wcm/foundation/components/responsivegrid too.
  * <p>
  * AEM properties:
  * <ul>
@@ -30,7 +31,13 @@ public class MigrateParsysComponent extends AbstractAemWcmCoreMigrationMethod {
     @Override
     public boolean migrate(Resource resource, PrintWriter log) {
         if (replaceResourceType(resource, "wknd/components/container",
-                "composum/prototype/aem-wcm-core-replacement/components/parsys")) {
+                "composum/prototype/aem-wcm-core-replacement/components/parsys")
+                || replaceResourceType(resource, "dam/cfm/components/grid",
+                "composum/prototype/aem-wcm-core-replacement/components/parsys")
+                || replaceResourceType(resource, "wcm/foundation/components/responsivegrid",
+                "composum/prototype/aem-wcm-core-replacement/components/parsys")
+        ) {
+            // FIXME(hps,08.01.24) Check whether there is more to ht. cq:responsive comes to mind.
             LOG.debug("MigrateParsysComponent.migrate({})", resource.getPath());
             log.println("MigrateParsysComponent.migrate(" + resource.getPath() + ")");
             log.flush();

@@ -56,6 +56,9 @@ replaced by
 composum/prototype/aem-wcm-core-replacement/components/parsys ->
 composum/pages/components/container/parsys
 
+We also migrate dam/cfm/components/grid and wcm/foundation/components/responsivegrid like that for now, though that
+isn't quite correct. // FIXME(hps,08.01.24) revisit this
+
 https://github.com/adobe/aem-core-wcm-components/tree/main/content/src/content/jcr_root/apps/core/wcm/components/container/v1/container
 vs.
 https://github.com/ist-dresden/composum-pages/tree/develop/components/package/src/main/content/jcr_root/libs/composum/pages/components/container/parsys
