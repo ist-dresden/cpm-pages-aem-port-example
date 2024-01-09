@@ -1,5 +1,6 @@
 package composum.prototype.aemwcmcorereplacement.migration.impl;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class AemWcmCoreMigrationServiceImpl implements AemWcmCoreMigrationServic
     private volatile List<AemWcmCoreMigrationMethod> methods;
 
     @Override
-    public void migrateSingleResource(@Nonnull Resource resource, @Nonnull PrintWriter log) {
+    public void migrateSingleResource(@Nonnull Resource resource, @Nonnull PrintWriter log) throws IOException {
         for (AemWcmCoreMigrationMethod method : methods) {
             if (method.migrate(resource, log)) {
                 LOG.debug("Migrated {} with {}", resource.getPath(), method);

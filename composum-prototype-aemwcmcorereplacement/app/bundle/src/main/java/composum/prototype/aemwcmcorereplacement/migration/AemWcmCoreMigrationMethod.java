@@ -1,5 +1,6 @@
 package composum.prototype.aemwcmcorereplacement.migration;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.apache.sling.api.resource.Resource;
@@ -14,6 +15,6 @@ public interface AemWcmCoreMigrationMethod {
      *
      * @return true if this method migrated the resource, false if it didn't feel responsible for the given resource.
      */
-    boolean migrate(Resource resource, PrintWriter log);
+    boolean migrate(Resource resource, PrintWriter log) throws IOException;
 
 }
