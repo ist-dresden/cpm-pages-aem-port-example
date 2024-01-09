@@ -17,7 +17,7 @@ wknd/components/tabs	52
 wknd/components/breadcrumb	49
 OK wknd/components/experiencefragment	46
 OK wknd/components/teaser	42
-wknd/components/separator	43
+OK wknd/components/separator	43
 wknd/components/page	123
 wknd/components/image-list	30
 wknd/components/list	22
