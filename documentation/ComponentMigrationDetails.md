@@ -190,3 +190,20 @@ Composum: variation, title, subtitle, text, link, linkTitle, linkTarget, icon
   props: videoRef, posterRef, controls, autoplay, muted, loop, copyright, copyrightUrl, license, licenseUrl
 + link ("composum/pages/components/element/link")
   props: title, link, linkTitle, linkTarget
+
+## Site root
+
+Minimal composum site: root node plus sling:Folder assets. What a site root is at the AEM side is not easily
+recognizable from JCR properties, so we provide a method to migrate site roots explicitly on JCR xpath query.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:cpp="http://sling.composum.com/pages/1.0"
+          xmlns:jcr="http://www.jcp.org/jcr/1.0"
+          xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          jcr:primaryType="cpp:Site">
+    <jcr:content
+            jcr:primaryType="cpp:SiteConfiguration"
+            sling:resourceType="composum/pages/stage/edit/site"/>
+</jcr:root>
+```

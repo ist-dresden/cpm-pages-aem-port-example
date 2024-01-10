@@ -81,4 +81,20 @@ public abstract class AbstractAemWcmCoreMigrationMethod implements AemWcmCoreMig
     protected boolean isTrue(@Nonnull Resource resource, @Nonnull String attributeName) {
         return "true".equals(resource.getValueMap().get(attributeName, ""));
     }
+
+    protected void logMigrationStart(Resource resource, PrintWriter log) {
+        LOG.debug("{}: Migration started for {}", this.getClass().getSimpleName(), resource.getPath());
+        log.println(this.getClass().getSimpleName() + ": Migration started for " + resource.getPath());
+    }
+
+    protected void logWarning(String message, Resource resource, PrintWriter log) {
+        LOG.warn("{}: {}", this.getClass().getSimpleName(), message);
+        log.println("WARNING: " + message + " for " + resource.getPath());
+    }
+
+    protected void logError(String message, Resource resource, PrintWriter log) {
+        LOG.error("{}: {}", this.getClass().getSimpleName(), message);
+        log.println("ERROR: " + message + " for " + resource.getPath());
+    }
+
 }

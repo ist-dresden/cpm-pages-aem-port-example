@@ -39,4 +39,18 @@ public class AemWcmCoreMigrationServiceImpl implements AemWcmCoreMigrationServic
         LOG.debug("No migration method found for {}", resource.getPath());
     }
 
+    @Override
+    public void migrateSiteRoots(@Nonnull Resource resource, @Nonnull PrintWriter log) throws IOException {
+        String query = "/jcr:root" + resource.getPath() + "//*[" + PROP_SITEROOT_MARKER + "]";
+        resource.getResourceResolver().findResources(query, "xpath").forEachRemaining(siteRoot -> {
+            for (AemWcmCoreMigrationMethod method : methods) {
+                if (method.migrateSiteroot(siteRoot, log)) {
+                    LOG.debug("Migrated {} with {}", siteRoot.getPath(), method);
+                    return;
+                }
+            }
+
+        });
+    }
+
 }

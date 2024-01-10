@@ -15,6 +15,17 @@ public interface AemWcmCoreMigrationMethod {
      *
      * @return true if this method migrated the resource, false if it didn't feel responsible for the given resource.
      */
-    boolean migrate(Resource resource, PrintWriter log) throws IOException;
+    default boolean migrate(Resource resource, PrintWriter log) throws IOException {
+        return false;
+    }
+
+    /**
+     * Migrates a site root marked with {@value AemWcmCoreMigrationService#PROP_SITEROOT_MARKER}.
+     *
+     * @return true if this method migrated the resource, false if it didn't feel responsible.
+     */
+    default boolean migrateSiteroot(Resource resource, PrintWriter log) {
+        return false;
+    }
 
 }
