@@ -207,3 +207,32 @@ recognizable from JCR properties, so we provide a method to migrate site roots e
             sling:resourceType="composum/pages/stage/edit/site"/>
 </jcr:root>
 ```
+
+## Page
+
+wknd/components/page -> core/wcm/components/page/v2/page
+replaced by
+composum/pages/components/page with template
+apps/composum/prototype/aem-wcm-core-replacement/templates/page -> composum/pages/components/container/parsys
+
+https://github.com/adobe/aem-core-wcm-components/tree/main/content/src/content/jcr_root/apps/core/wcm/components/page/v2/page
+
+FIXME(hps,10.01.24) observe properties.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:cpp="http://sling.composum.com/pages/1.0"
+        xmlns:jcr="http://www.jcp.org/jcr/1.0"
+        xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+        jcr:primaryType="cpp:Page">
+    <jcr:content
+            jcr:primaryType="cpp:PageContent"
+            sling:resourceType="composum/pages/components/page"
+            jcr:title="Pages Components Test Page"
+            template="apps/composum/prototype/aem-wcm-core-replacement/templates/page">
+        <main
+                jcr:primaryType="cpp:Container"
+                sling:resourceType="composum/pages/components/container/parsys"/>
+    </jcr:content>
+</jcr:root>
+```

@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +86,7 @@ public abstract class AbstractAemWcmCoreMigrationMethod implements AemWcmCoreMig
     protected void logMigrationStart(Resource resource, PrintWriter log) {
         LOG.debug("{}: Migration started for {}", this.getClass().getSimpleName(), resource.getPath());
         log.println(this.getClass().getSimpleName() + ": Migration started for " + resource.getPath());
+        log.flush();
     }
 
     protected void logWarning(String message, Resource resource, PrintWriter log) {
@@ -95,6 +97,21 @@ public abstract class AbstractAemWcmCoreMigrationMethod implements AemWcmCoreMig
     protected void logError(String message, Resource resource, PrintWriter log) {
         LOG.error("{}: {}", this.getClass().getSimpleName(), message);
         log.println("ERROR: " + message + " for " + resource.getPath());
+    }
+
+    /**
+     * Rename a resource.
+     */
+    protected void renameNode(Resource resource, String newName) throws PersistenceException {
+        // Absurd implementation since Sling doesn't support that operation. 8-{}
+        // create a new node with the same properties, move all children and delete the old node.
+        ResourceResolver resolver = resource.getResourceResolver();
+        String newPath = resource.getParent().getPath() + "/" + newName;
+        resolver.create(resource.getParent(), newName, resource.getValueMap());
+        for (Resource child : resource.getChildren()) {
+            resolver.move(child.getPath(), newPath);
+        }
+        resolver.delete(resource);
     }
 
 }
