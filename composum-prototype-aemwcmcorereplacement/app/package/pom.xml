@@ -119,6 +119,9 @@
                             <root>/apps/composum/prototype/aem-wcm-core-replacement</root>
                         </filter>
                         <filter>
+                            <root>/apps/wknd</root>
+                        </filter>
+                        <filter>
                             <root>/apps/composum/prototype/install</root>
                             <includes>
                                 <include>.*/composum-prototype-aemwcmcorereplacement-app-bundle.*\.jar</include>
