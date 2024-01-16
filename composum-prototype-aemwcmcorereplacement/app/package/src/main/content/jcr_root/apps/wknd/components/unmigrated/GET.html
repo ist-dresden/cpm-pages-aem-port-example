@@ -1,0 +1,10 @@
+<div>
+    <h6>unmigrated component</h6>
+    <p>${resource.path} : ${resource.resourceType}</p>
+    <p>
+        <sly data-sly-list.element="${resource.valueMap.entrySet}">${element.key}:${element.value},</sly>
+    </p>
+    <p>Children:
+        <sly data-sly-list.child="${resource.children}">${child.name}</sly>
+    </p>
+</div>

@@ -1,0 +1,30 @@
+<'nt'='http://www.jcp.org/jcr/nt/1.0'>
+<'mix'='http://www.jcp.org/jcr/mix/1.0'>
+<'jcr'='http://www.jcp.org/jcr/1.0'>
+<'sling'='http://sling.apache.org/jcr/sling/1.0'>
+<'cpp'='http://sling.composum.com/pages/1.0'>
+<'cpl'='http://sling.composum.com/platform/1.0'>
+<'cq'='http://www.day.com/jcr/cq/1.0'>
+
+[cq:CppMigratedSite] > cq:Page, cpp:Site
+  orderable
+  + jcr:content (cpp:SiteConfiguration) = cpp:SiteConfiguration *
+
+[cq:Page] > nt:hierarchyNode, cpp:Page
+  orderable primaryitem jcr:content
+  + * (nt:base) = nt:base version
+  + jcr:content (nt:base) = nt:unstructured
+
+[cq:PageContent] > cq:OwnerTaggable, cq:ReplicationStatus, mix:created, mix:title, nt:unstructured, sling:Resource, sling:VanityPath, cpp:PageContent
+  orderable
+  - pageTitle (string)
+  - cq:lastModified (date)
+  - jcr:language (string)
+  - offTime (date)
+  - cq:lastModifiedBy (string)
+  - hideInNav (boolean)
+  - cq:designPath (string)
+  - cq:template (string)
+  - onTime (date)
+  - navTitle (string)
+  - cq:allowedTemplates (string) multiple
