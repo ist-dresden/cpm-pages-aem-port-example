@@ -35,9 +35,6 @@ import com.adobe.cq.wcm.core.components.models.datalayer.ComponentData;
 import com.adobe.cq.wcm.core.components.models.datalayer.ContainerData;
 import com.adobe.cq.wcm.core.components.models.datalayer.ImageData;
 import com.adobe.cq.wcm.core.components.models.datalayer.PageData;
-import com.day.cq.dam.api.Asset;
-import com.day.cq.dam.api.DamConstants;
-import com.day.cq.tagging.TagConstants;
 
 import static com.adobe.cq.wcm.core.components.models.datalayer.builder.DataLayerSupplier.EMPTY_SUPPLIER;
 
@@ -108,6 +105,7 @@ public final class DataLayerBuilder {
      * @param asset The asset used to initialize the AssetDataBuilder.
      * @return A new AssetDataBuilder pre-initialized using the DAM asset metadata.
      */
+    /* CPMREMOVE
     public static AssetDataBuilder forAsset(@NotNull final Asset asset) {
         return DataLayerBuilder.forAsset()
             .withId(asset::getID)
@@ -144,6 +142,7 @@ public final class DataLayerBuilder {
                 return smartTags;
             });
     }
+    */
 
     /**
      * Get a AssetDataBuilder that extends existing asset data.

@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.adobe.cq.wcm.core.components.models.contentfragment.DAMContentFragment;
+// CPMREMOVE import com.adobe.cq.wcm.core.components.models.contentfragment.DAMContentFragment;
 import com.adobe.cq.wcm.core.components.models.datalayer.ContentFragmentData;
 import com.adobe.cq.wcm.core.components.models.datalayer.builder.DataLayerSupplier;
 
@@ -37,6 +37,7 @@ public class ContentFragmentDataImpl extends ComponentDataImpl implements Conten
             .orElse(null);
     }
 
+    /* CPMREMOVE
     public static class ElementDataImpl implements ElementData {
 
         @NotNull
@@ -56,4 +57,6 @@ public class ContentFragmentDataImpl extends ComponentDataImpl implements Conten
             return contentElement.getValue(String.class);
         }
     }
+    */
+
 }
