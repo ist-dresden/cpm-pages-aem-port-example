@@ -5,26 +5,206 @@
 <'cpp'='http://sling.composum.com/pages/1.0'>
 <'cpl'='http://sling.composum.com/platform/1.0'>
 <'cq'='http://www.day.com/jcr/cq/1.0'>
+<'dam'='http://www.day.com/dam/1.0'>
+<'granite'='http://www.adobe.com/jcr/granite/1.0'>
 
-[cq:CppMigratedSite] > cq:Page, cpp:Site
+[cq:ClientLibraryFolder] > sling:Folder
+  - dependencies (string) multiple
+  - categories (string) multiple
+  - embed (string) multiple
+  - channels (string) multiple
+
+[cq:Component] > mix:title, nt:folder, sling:ResourceSuperType
+  - dialogPath (string)
+  - cq:noDecoration (boolean)
+  - allowedChildren (string) multiple
+  - * (undefined)
+  - cq:isContainer (boolean)
+  - allowedParents (string) multiple
+  - * (undefined) multiple
+  - cq:cellName (string)
+  - componentGroup (string)
+  + dialog (nt:base) = nt:unstructured
+  + design_dialog (nt:base) = nt:unstructured
+  + cq:htmlTag (nt:base) = nt:unstructured
+  + * (nt:base) = nt:base multiple version
+  + cq:infoProviders (nt:base) = nt:unstructured
+  + cq:editConfig (cq:EditConfig) = cq:EditConfig
+  + icon.png (nt:file)
+  + cq:childEditConfig (cq:EditConfig) = cq:EditConfig
+  + thumbnail.png (nt:file)
+  + virtual (nt:base) = sling:Folder
+
+[cq:Dialog] > cq:Widget
   orderable
-  + jcr:content (cpp:SiteConfiguration) = cpp:SiteConfiguration *
+
+[cq:DropTargetConfig] > nt:unstructured
+  orderable
+  - propertyName (string)
+  - accept (string) multiple
+  - groups (string) multiple
+  + parameters (nt:base) = nt:unstructured
+
+[cq:EditConfig] > nt:hierarchyNode, nt:unstructured
+  orderable
+  - cq:dialogMode (string) < 'auto', 'floating', 'inline'
+  - cq:emptyText (string)
+  - cq:layout (string) < 'editbar', 'rollover', 'auto'
+  - cq:inherit (boolean)
+  - cq:actions (string) multiple
+  + cq:inplaceEditing (cq:InplaceEditingConfig) = cq:InplaceEditingConfig
+  + cq:actionConfigs (nt:base) = nt:unstructured
+  + cq:listeners (nt:base) = cq:EditListenersConfig
+  + cq:formParameters (nt:base) = nt:unstructured
+  + cq:dropTargets (nt:base) = nt:unstructured
+
+[cq:EditListenersConfig]
+  - afteredit (string)
+  - aftermove (string)
+  - afterremove (string)
+  - afterinsert (string)
+  - * (undefined)
+  - afterdelete (string)
+  - * (undefined) multiple
+  - aftercreate (string)
+  + * (nt:base) = nt:base multiple version
+
+[cq:Field] > cq:Widget
+  orderable
+  - value (string)
+  - fieldLabel (string)
+  - ignoreData (boolean)
+
+  [cq:InplaceEditingConfig] > nt:unstructured
+    orderable
+    - editorType (string)
+    - configPath (string)
+    - active (boolean)
+    + config (nt:unstructured) = nt:unstructured
+
+[cq:LcPathFilter]
+  mixin
+  - cq:excludedPaths (string) multiple
+
+[cq:LiveCopy] > cq:LcPathFilter, cq:LiveSyncConfig
+  - cq:moveTarget (string)
+
+[cq:LiveRelationship]
+  mixin
+  - cq:lastRolledout (date)
+  - cq:lastRolledoutBy (string)
+
+[cq:LiveSync] > cq:LiveRelationship
+  orderable mixin
+  + cq:LiveSyncConfig (nt:base) = cq:LiveSyncConfig
+
+[cq:LiveSyncAction] > nt:unstructured
+
+[cq:LiveSyncCancelled] > cq:LiveRelationship
+  mixin
+  - cq:isCancelledForChildren (boolean)
+
+[cq:LiveSyncConfig]
+  - cq:trigger (string)
+  - cq:isDeep (boolean) = 'true'
+  - cq:rolloutConfigs (string) multiple
+  - cq:master (string) mandatory
+
+[cq:OwnerTaggable] > cq:Taggable
+  mixin
 
 [cq:Page] > nt:hierarchyNode, cpp:Page
   orderable primaryitem jcr:content
-  + * (nt:base) = nt:base version
   + jcr:content (nt:base) = nt:unstructured
+  + * (nt:base) = nt:base version
 
 [cq:PageContent] > cq:OwnerTaggable, cq:ReplicationStatus, mix:created, mix:title, nt:unstructured, sling:Resource, sling:VanityPath, cpp:PageContent
   orderable
-  - pageTitle (string)
   - cq:lastModified (date)
-  - jcr:language (string)
-  - offTime (date)
-  - cq:lastModifiedBy (string)
-  - hideInNav (boolean)
-  - cq:designPath (string)
   - cq:template (string)
+  - pageTitle (string)
+  - offTime (date)
+  - hideInNav (boolean)
+  - cq:lastModifiedBy (string)
   - onTime (date)
-  - navTitle (string)
+  - jcr:language (string)
   - cq:allowedTemplates (string) multiple
+  - cq:designPath (string)
+  - navTitle (string)
+
+[cq:Panel] > cq:Widget
+  orderable
+
+[cq:ReplicationStatus]
+  mixin
+  - cq:lastReplicatedBy (string) ignore
+  - cq:lastPublished (date) ignore
+  - cq:lastReplicationStatus (string) ignore
+  - cq:lastPublishedBy (string) ignore
+  - cq:lastReplicationAction (string) ignore
+  - cq:lastReplicated (date) ignore
+
+[cq:TabPanel] > cq:Panel
+  orderable
+  - activeTab (long)
+
+[cq:Tag] > mix:title, nt:hierarchyNode
+  orderable
+  - sling:resourceType (string) = 'cq/tagging/components/tag' mandatory autocreated
+  - * (undefined) multiple
+  - * (undefined)
+  + * (nt:base) = cq:Tag version
+
+[cq:Taggable]
+  mixin
+  - cq:tags (string) multiple
+
+
+[cq:Template] > mix:title, nt:hierarchyNode
+  - * (undefined) multiple
+  - allowedChildren (string) multiple
+  - allowedParents (string) multiple
+  - ranking (long)
+  - * (undefined)
+  + thumbnail.png (nt:file)
+  + workflows (nt:base)
+  + * (nt:base) = nt:base multiple version
+  + jcr:content (nt:base)
+  + icon.png (nt:file)
+
+
+[cq:Widget] > nt:unstructured
+  orderable
+  - name (string)
+  - xtype (string)
+  - title (string)
+  + items (nt:base) = cq:WidgetCollection
+
+[cq:WidgetCollection] > nt:unstructured
+  orderable
+  + * (cq:Widget) = cq:Widget
+
+[dam:Asset] > nt:hierarchyNode
+  primaryitem jcr:content
+  + jcr:content (dam:AssetContent) = dam:AssetContent
+  + * (nt:base) = nt:base version
+
+[dam:AssetContent] > nt:unstructured
+  + metadata (nt:unstructured)
+  + related (nt:unstructured)
+  + renditions (nt:folder)
+
+[dam:Metadata]
+  mixin
+  + metadata (nt:unstructured)
+
+[dam:Thumbnails]
+  mixin
+  + dam:thumbnails (nt:folder)
+
+[dam:cfVariationNode] > nt:unstructured
+  mixin
+
+[granite:Ranking]
+  mixin
+  - granite:ranking (long)
