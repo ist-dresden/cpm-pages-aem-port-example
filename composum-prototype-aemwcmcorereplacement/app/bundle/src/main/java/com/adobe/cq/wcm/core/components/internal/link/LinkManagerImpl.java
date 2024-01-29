@@ -39,8 +39,6 @@ import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.designer.Style;
 import com.google.common.collect.ImmutableSet;
 
-import static com.adobe.cq.wcm.core.components.commons.link.Link.PN_LINK_URL;
-
 @Model(adaptables = SlingHttpServletRequest.class,
         adapters = LinkManager.class)
 public class LinkManagerImpl implements LinkManager {
