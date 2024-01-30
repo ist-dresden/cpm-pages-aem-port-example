@@ -6,18 +6,17 @@ for future ports of AEM projects to Composum Pages and maybe make some appropria
 needed.
 
 Thus, we take the WKND site as an example and migrate / port only those parts of the wcm.io components library that 
-are actually used. We copy step by step the classes / components over to this project and modify them.
+are actually used. We copy step by step components over to this project and modify them. Java classes seem too 
+specific to AEM, so we recreate corresponding classes.
 
 We base the port on commit 35b90febc3ecbe058ae77f0094b7018b3c34b303 (release 2.23.4).
 
 ## Markers
 
 To clearly show which parts are copied from the wcm.io library, which parts are changed and which parts are new, we
-will observe the following.
+will observe the following. 
 
-- Java classes that are unmodified or only slightly modified stay at the same packages. If we create new 
-  implementations, we will use packages with com.composum in them.
+- We copy the components and try not to modify them. If they have to be modified:
   - Changes are marked with // CPMCHANGE
   - Commented out parts are marked with // CPMREMOVE
   - Additions are marked with // CPMADD
-- Similarly, we try to copy components as they are
