@@ -135,6 +135,10 @@
 [cq:Panel] > cq:Widget
   orderable
 
+[cq:PropertyLiveSyncCancelled] > cq:LiveRelationship
+  mixin
+  - cq:propertyInheritanceCancelled (string) multiple
+
 [cq:ReplicationStatus]
   mixin
   - cq:lastReplicatedBy (string) ignore
