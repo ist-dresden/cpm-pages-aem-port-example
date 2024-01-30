@@ -47,7 +47,9 @@
                             javax.annotation.*;version="[0,4)",
                             *
                         </Import-Package>
-                        <Sling-Model-Packages>composum.prototype.aemwcmcorereplacement.model.*</Sling-Model-Packages>
+                        <Sling-Model-Packages>
+                            com.adobe.cq.wcm.core.components.models
+                        </Sling-Model-Packages>
                         <Private-Package>composum.prototype.aemwcmcorereplacement.impl.*</Private-Package>
                     </instructions>
                 </configuration>
