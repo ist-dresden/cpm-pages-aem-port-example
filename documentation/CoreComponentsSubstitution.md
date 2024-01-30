@@ -1,8 +1,15 @@
 # Substitution / port of the AEM wcm core components
 
-It is approach for the migration. We try to make an AEM project run on Composum Pages with as few modification as
+We try to make an AEM project run on Composum Pages with as few modification as
 possible. We try to make sure that HTL pages run on composum with no changes if possible, instead of using JSPs.
 Only very convoluted functionalities of AEM that have a large mismatch to Composum should be migrated.
+
+## Artifacts, JCR paths
+
+- WKND ui.apps has /apps/wknd/{components,clientlibs,i18n} and /apps/msm/wknd_blueprint - we leave that unmodified 
+  as far as possible.
+- the /apps/wknd/components mostly refer to core/wcm/components/*, which we copy over from core wcm components to 
+  the aemwcmcorereplacement package.
 
 ## Differences of Composum and AEM – areas to migrate
 
