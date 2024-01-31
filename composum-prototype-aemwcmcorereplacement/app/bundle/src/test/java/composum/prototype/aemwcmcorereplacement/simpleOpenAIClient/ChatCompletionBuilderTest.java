@@ -9,23 +9,17 @@ public class ChatCompletionBuilderTest {
 
     @Test
     public void toJson() {
-        String json = new ChatCompletionBuilder().model("gpt-4").systemMsg("Hello").userMsg("How are you?").toJson();
+        String json = new ChatCompletionBuilder("foo").model("gpt-4").systemMsg("Hello").userMsg("How are you?").toJson();
         assertThat(json, is("{\n" +
                 "  \"model\": \"gpt-4\",\n" +
                 "  \"messages\": [\n" +
                 "    {\n" +
                 "      \"role\": \"system\",\n" +
-                "      \"content\": {\n" +
-                "        \"type\": \"text\",\n" +
-                "        \"data\": \"Hello\"\n" +
-                "      }\n" +
+                "      \"content\": \"Hello\"\n" +
                 "    },\n" +
                 "    {\n" +
                 "      \"role\": \"user\",\n" +
-                "      \"content\": {\n" +
-                "        \"type\": \"text\",\n" +
-                "        \"data\": \"How are you?\"\n" +
-                "      }\n" +
+                "      \"content\": \"How are you?\"\n" +
                 "    }\n" +
                 "  ],\n" +
                 "  \"temperature\": 0.0\n" +
