@@ -5,6 +5,9 @@ import static composum.prototype.aemwcmcorereplacement.aitasks.AIFileRepository.
 import java.io.File;
 import java.util.function.Supplier;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import composum.prototype.aemwcmcorereplacement.aitasks.AIFileRepository;
 import composum.prototype.aemwcmcorereplacement.aitasks.AITask;
 import composum.prototype.aemwcmcorereplacement.simpleOpenAIClient.ChatCompletionBuilder;
@@ -17,6 +20,8 @@ import composum.prototype.aemwcmcorereplacement.simpleOpenAIClient.ChatCompletio
  */
 public class RunWcmComponentsCodeGeneration {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RunWcmComponentsCodeGeneration.class);
+
     public static final String RELPATH_JCR_ROOT = "src/main/content/jcr_root";
 
     protected final AIFileRepository jcrContentApps = AIFileRepository.fromPath("../package", RELPATH_JCR_ROOT);
@@ -27,10 +32,11 @@ public class RunWcmComponentsCodeGeneration {
 
     // FIXME(hps,02.02.24) use gpt-4 in the end.
     protected final Supplier<ChatCompletionBuilder> chatBuilderFactory =
-            () -> new ChatCompletionBuilder().model("gpt-3.5-turbo");
+            () -> new ChatCompletionBuilder().model("gpt-4");
 
     public static void main(String[] args) {
         new RunWcmComponentsCodeGeneration().run();
+        LOG.info("Done.");
     }
 
     protected void run() {
@@ -43,13 +49,13 @@ public class RunWcmComponentsCodeGeneration {
      */
     protected void generateTextModel() {
         String modelClass = "com.adobe.cq.wcm.core.components.models.Text";
-        AITask task = new AITask();
-        task.addInputFile(jcrContentApps.file("apps/core/wcm/components/text/v2/text/README.md"));
-        task.addInputFiles(jcrContentApps.files("apps/core/wcm/components/text/v2/text", HTML_PATTERN, false));
-        task.setSystemMessage(aiPrompts.file("generalsystemmessage.prompt"));
-        task.setPrompt(aiPrompts.file("generateModelAttributeList.md"), "MODELCLASS", modelClass);
-        task.setOutputFile(javaDstDir.javaMdFile(modelClass));
-        task.execute(this.chatBuilderFactory, new File("../.."));
+        AITask createModelDescription = new AITask()
+                .setSystemMessage(aiPrompts.file("generalsystemmessage.prompt"))
+                .addInputFile(jcrContentApps.file("apps/core/wcm/components/text/v2/text/README.md"))
+                .addInputFiles(jcrContentApps.files("apps/core/wcm/components/text/v2/text", HTML_PATTERN, false))
+                .setPrompt(aiPrompts.file("generateModelAttributeList.md"), "MODELCLASS", modelClass)
+                .setOutputFile(javaDstDir.javaMdFile(modelClass))
+                .execute(this.chatBuilderFactory, new File("../.."));
     }
 
 }

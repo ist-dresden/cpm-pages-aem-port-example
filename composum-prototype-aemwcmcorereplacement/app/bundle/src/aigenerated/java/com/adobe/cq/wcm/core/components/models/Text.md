@@ -1,17 +1,17 @@
-<!-- AIGenVersion(4f5e25d071, README.md-822d35f834, text.html-c5e39866f6, generalsystemmessage.prompt-fa054920bc, generateModelAttributeList.md-adc4c98c59) -->
+<!-- AIGenVersion(a056af36ea, generalsystemmessage.prompt-fc686cf465, generateModelAttributeList.md-1.0, README.md-7c5fdf2c99, text.html-f02476e7ef) -->
 
 # com.adobe.cq.wcm.core.components.models.Text
 
 ## Short Description
-Text component written in HTL that provides a section of rich text.
+The Text component is written in HTL and provides a section of rich text. It supports in-place editing, a rich text editor, and styles.
 
 ## Classname
-com.adobe.cq.wcm.core.components.models.Text
+The classname used in the 'Use Object' is `com.adobe.cq.wcm.core.components.models.Text`.
 
-## JCR Attributes and Java Properties
+## Attributes and Properties
 
-| JCR Attribute | Java Property | Description                     |
-|---------------|---------------|---------------------------------|
-| ./text        | text          | the actual text to be rendered  |
-| ./textIsRich  | isRichText    | flag determining if the rendered text is rich or not, useful for applying the correct HTL display context |
-| ./id          | id            | defines the component HTML ID attribute |
+| JCR Attribute | Java Property | Description                                                     |
+|-------------|---------------|-----------------------------------------------------------------|
+| `./text`         | text           | The actual text to be rendered                                 |
+| `./textIsRich`         | isRichText           | Flag determining if the rendered text is rich or not, useful for applying the correct HTL display context       |
+| `./id`         | id           | Defines the component HTML ID attribute |

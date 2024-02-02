@@ -1,7 +1,8 @@
-Consider the given README.md and the Sightly / HTL .html files for information about the MODELCLASS .
+<!-- AIGenVersion(1.0) -->
+Consider the retrieved README.md and the retrieved Sightly / HTL *.html files for information about the MODELCLASS .
 In the README.md the section `### Use Object` contains the JCR attributes that need to be read by the class
-MODELCLASS later, and the .html file can show you which java property will be used
-to access those attributes.
+MODELCLASS later, and the *.html file can show you which java property will be used
+to access those attributes - look for the `data-sly-use` declaration of a Sling model with the MODELCLASS.
 
 Output a markdown document with the following information:
 
@@ -16,8 +17,8 @@ Output a markdown document with the following information:
 Example for the table, where bar is not used in a Java property of the Sling Model and id is used but not in a JCR 
 property:  
 
-| JCR Attribute | Java Property | Description                     |
-|-------------|---------------|---------------------------------|
-| foo         | foo           | a foo to be used as thingamagic |
-| bar         |               | flag for the type of the foo    |
-|             | id            | generated id                    |
+| JCR Attribute | Java Property | Description                                                     |
+|-------------|---------------|-----------------------------------------------------------------|
+| foo         | foo           | a foo to be used as thingamagic                                 |
+| bar         |               | flag for the type of the foo which is not used in a .html       |
+|             | id            | generated id used in a .html but not mentioned in the README.md |

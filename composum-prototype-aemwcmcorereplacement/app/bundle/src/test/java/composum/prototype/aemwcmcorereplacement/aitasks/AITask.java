@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -119,16 +122,12 @@ public class AITask {
         }
         List<String> inputVersions = calculateAllInputsMarkers();
         List<String> oldInputVersions = outputVersionMarker.getInputversions();
-        return !inputVersions.equals(oldInputVersions);
+        return !new HashSet(inputVersions).equals(new HashSet(oldInputVersions));
     }
 
     @NotNull
     private List<String> calculateAllInputsMarkers() {
         List<String> allInputsMarkers = new ArrayList<>();
-        for (File inputFile : inputFiles) {
-            String version = determineFileVersionMarker(inputFile);
-            allInputsMarkers.add(version);
-        }
         if (systemMessageFile != null) {
             allInputsMarkers.add(determineFileVersionMarker(systemMessageFile));
         }
@@ -136,6 +135,10 @@ public class AITask {
             allInputsMarkers.add(determineFileVersionMarker(promptFile));
         } else {
             allInputsMarkers.add(prompt);
+        }
+        for (File inputFile : inputFiles) {
+            String version = determineFileVersionMarker(inputFile);
+            allInputsMarkers.add(version);
         }
         return allInputsMarkers;
     }
@@ -146,10 +149,13 @@ public class AITask {
             throw new RuntimeException("Could not read file " + file);
         }
         AIVersionMarker aiVersionMarker = AIVersionMarker.find(content);
+        String version;
         if (aiVersionMarker != null) {
-            return aiVersionMarker.getOurVersion();
+            version = aiVersionMarker.getOurVersion();
+        } else {
+            version = shaHash(content);
         }
-        return file.getName() + "-" + shaHash(content);
+        return file.getName() + "-" + version;
     }
 
     protected String shaHash(String content) {
@@ -174,12 +180,23 @@ public class AITask {
         return aiVersionMarker;
     }
 
+    /**
+     * A pattern that matches the license header, which we want to remove to avoid clutter.
+     */
+    public static final Pattern PATTERN_LICENCE =
+            Pattern.compile("\\A<!--(?s).*?Copyright.*?Adobe.*?Licensed under.*?-->");
+
     protected String getFileContent(@Nonnull File file) {
         if (!file.exists()) {
             return null;
         }
         try {
-            return Files.toString(file, StandardCharsets.UTF_8);
+            String content = Files.toString(file, StandardCharsets.UTF_8);
+            Matcher matcher = PATTERN_LICENCE.matcher(content);
+            if (matcher.find()) {
+                content = matcher.replaceFirst("");
+            }
+            return content;
         } catch (IOException e) {
             throw new RuntimeException("Error reading file " + file, e);
         }
@@ -188,8 +205,10 @@ public class AITask {
 
     /**
      * The actual prompt to be executed. The prompt file content can contain placeholders that are replaced by the values given: placeholdersAndValues contain alternatingly placeholder names and values for them.
+     *
+     * @return
      */
-    public void setPrompt(@Nonnull File promptFile, String... placeholdersAndValues) {
+    public AITask setPrompt(@Nonnull File promptFile, String... placeholdersAndValues) {
         String prompt = getFileContent(promptFile);
         if (prompt == null) {
             throw new RuntimeException("Could not read prompt file " + promptFile);
@@ -202,15 +221,17 @@ public class AITask {
         }
         this.prompt = prompt;
         this.promptFile = promptFile;
+        return this;
     }
 
-    public void setSystemMessage(@Nonnull File systemMessageFile) {
+    public AITask setSystemMessage(@Nonnull File systemMessageFile) {
         String systemMessage = getFileContent(systemMessageFile);
         if (systemMessage == null) {
             throw new RuntimeException("Could not read system message file " + systemMessageFile);
         }
         this.systemMessage = systemMessage;
         this.systemMessageFile = systemMessageFile;
+        return this;
     }
 
     @Override
@@ -248,8 +269,10 @@ public class AITask {
 
     /**
      * Execute the task if necessary.
+     *
+     * @return
      */
-    public void execute(@Nonnull Supplier<ChatCompletionBuilder> chatBuilderFactory, @Nonnull File rootDirectory) {
+    public AITask execute(@Nonnull Supplier<ChatCompletionBuilder> chatBuilderFactory, @Nonnull File rootDirectory) {
         if (outputFile == null) {
             throw new RuntimeException("No writeable output file given! " + outputFile);
         }
@@ -263,7 +286,7 @@ public class AITask {
         String outputRelPath = relativePath(this.outputFile, rootDirectory);
         if (!hasToBeRun()) {
             LOG.info("Task does not have to be run for: {}", outputRelPath);
-            return;
+            return null;
         }
         ChatCompletionBuilder chat = chatBuilderFactory.get();
         if (StringUtils.isNotBlank(systemMessage)) {
@@ -275,7 +298,7 @@ public class AITask {
             chat.assistantMsg(getFileContent(file));
         });
         chat.userMsg(prompt);
-        LOG.info("Chat for task execution for: {}\n{}", outputRelPath, chat.toJson());
+        LOG.info("Executing chat for: {}\n{}", outputRelPath, chat.toJson());
         String result = chat.execute();
         LOG.info("Result for task execution for: {}\n{}", outputRelPath, result);
         if (result.contains(FIXME)) {
@@ -291,6 +314,7 @@ public class AITask {
             throw new RuntimeException("Error writing file " + outputFile, e);
         }
         LOG.info("Wrote file file://" + outputFile.getAbsolutePath());
+        return this;
     }
 
 }
