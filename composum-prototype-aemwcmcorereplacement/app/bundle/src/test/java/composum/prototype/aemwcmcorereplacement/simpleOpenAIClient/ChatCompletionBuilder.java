@@ -63,6 +63,13 @@ public class ChatCompletionBuilder {
         return this;
     }
 
+    public ChatCompletionBuilder assistantMsg(String text) {
+        if (text != null && !text.isEmpty()) {
+            messages.add(new Message("assistant", text));
+        }
+        return this;
+    }
+
     private ChatCompletionRequest build() {
         return new ChatCompletionRequest(model, messages, 0, maxTokens);
     }

@@ -9,8 +9,9 @@ Output a markdown document with the following information:
 2. The classname listed in '### Use Object' in the README.md
 3. A table with the following columns:
     - `jcr attribute` : the JCR attribute that is returned by the java property, as listed in README.md
-    - `java property` : the Java property name as determined from the .html files.
+    - `java property` : the Java property name as determined from the .html files. IMPORTANT: only when it is 
+      actually used in a .html file!
     - `description` : the description of the jcr attribute, as listed in the README.
 
-If the information cannot be determined / is unclear, append to the file a paragraph starting with `FIXME` and a
-description of the problem.
+IMPORTANT: If the information cannot be determined / is unclear, append to the file a paragraph starting with `FIXME` 
+and a description of the problem.

@@ -5,16 +5,20 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.io.Files;
+
+import composum.prototype.aemwcmcorereplacement.simpleOpenAIClient.ChatCompletionBuilder;
 
 /**
  * We support the generation of files using an AI, specifically ChatGPT. A generation task can have several input files.
@@ -53,6 +57,9 @@ public class AITask {
     private List<File> inputFiles = new ArrayList<>();
     private File outputFile;
     private String prompt;
+    private File promptFile;
+    private String systemMessage;
+    private File systemMessageFile;
 
     public AITask addInputFile(File file) {
         if (!file.exists()) {
@@ -86,33 +93,6 @@ public class AITask {
         return this;
     }
 
-    public void process(Function<List<File>, String> aiExecution) {
-        if (!hasToBeRun()) {
-            return;
-        }
-        String result = aiExecution.apply(inputFiles);
-        String outputVersion = DigestUtils.sha256Hex(result);
-        List<String> inputVersions = new ArrayList<>();
-        for (File inputFile : inputFiles) {
-            String version = calculateFileVersion(inputFile);
-            inputVersions.add(inputFile.getName() + "@" + version);
-        }
-        AIVersionMarker aiVersionMarker = new AIVersionMarker(outputVersion, inputVersions);
-        result = embedComment(result, aiVersionMarker.toString());
-
-        String versionComment = "AIGenVersion(" + calculateFileVersion(outputFile);
-        for (File inputFile : inputFiles) {
-            versionComment += ", " + inputFile.getName() + "@" + calculateFileVersion(inputFile);
-        }
-        versionComment += ")";
-        result = result.replaceFirst("AIGenVersion\\(.*\\)", versionComment);
-        try {
-            Files.write(result, outputFile, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException("Error writing file " + outputFile, e);
-        }
-    }
-
     protected String embedComment(String content, String comment) {
         if (outputFile.getName().endsWith(".java")) {
             return "// " + comment + "\n" + content;
@@ -129,19 +109,33 @@ public class AITask {
         if (!outputFile.exists()) {
             return true;
         }
-        AIVersionMarker outputVersionMarker = getOutputVersionMarker();
+        AIVersionMarker outputVersionMarker = getRecordedOutputVersionMarker();
         if (outputVersionMarker == null) {
             return true;
         }
-        List<String> inputVersions = new ArrayList<>();
-        for (File inputFile : inputFiles) {
-            String version = calculateFileVersion(inputFile);
-            inputVersions.add(inputFile.getName() + "@" + version);
-        }
+        List<String> inputVersions = calculateAllInputsMarkers();
         return !inputVersions.equals(outputVersionMarker.getInputversions());
     }
 
-    protected String calculateFileVersion(@Nonnull File file) {
+    @NotNull
+    private List<String> calculateAllInputsMarkers() {
+        List<String> allInputsMarkers = new ArrayList<>();
+        for (File inputFile : inputFiles) {
+            String version = determineFileVersionMarker(inputFile);
+            allInputsMarkers.add(version);
+        }
+        if (systemMessageFile != null) {
+            allInputsMarkers.add(determineFileVersionMarker(systemMessageFile));
+        }
+        if (promptFile != null) {
+            allInputsMarkers.add(determineFileVersionMarker(promptFile));
+        } else {
+            allInputsMarkers.add(prompt);
+        }
+        return allInputsMarkers;
+    }
+
+    protected String determineFileVersionMarker(@Nonnull File file) {
         String content = getFileContent(file);
         if (content == null) {
             throw new RuntimeException("Could not read file " + file);
@@ -150,13 +144,13 @@ public class AITask {
         if (aiVersionMarker != null) {
             return aiVersionMarker.getOurVersion();
         }
-        return DigestUtils.sha256Hex(content);
+        return file.getName() + "-" + DigestUtils.sha256Hex(content);
     }
 
     /**
-     * Version of output file.
+     * Version of current output file.
      */
-    protected AIVersionMarker getOutputVersionMarker() {
+    protected AIVersionMarker getRecordedOutputVersionMarker() {
         if (!outputFile.exists()) {
             return null;
         }
@@ -182,6 +176,7 @@ public class AITask {
         }
     }
 
+
     /**
      * The actual prompt to be executed. The prompt file content can contain placeholders that are replaced by the values given: placeholdersAndValues contain alternatingly placeholder names and values for them.
      */
@@ -197,5 +192,96 @@ public class AITask {
             prompt = prompt.replace(placeholdersAndValues[i], placeholdersAndValues[i + 1]);
         }
         this.prompt = prompt;
+        this.promptFile = promptFile;
     }
+
+    public void setSystemMessage(@Nonnull File systemMessageFile) {
+        String systemMessage = getFileContent(systemMessageFile);
+        if (systemMessage == null) {
+            throw new RuntimeException("Could not read system message file " + systemMessageFile);
+        }
+        this.systemMessage = systemMessage;
+        this.systemMessageFile = systemMessageFile;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("AITask{");
+        sb.append("inputFiles=").append(inputFiles);
+        sb.append(", outputFile=").append(outputFile);
+        sb.append(", systemMessageFile=").append(systemMessageFile);
+        sb.append(", systemMessage='").append(systemMessage).append('\'');
+        sb.append(", promptFile=").append(promptFile);
+        sb.append(", prompt='").append(prompt).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
+    protected String relativePath(@Nullable File file, @Nonnull File rootDirectory) {
+        if (file == null) {
+            return null;
+        }
+        if (rootDirectory == null) {
+            throw new RuntimeException("Root directory must not be null");
+        }
+        String rootPath = null;
+        try {
+            rootPath = rootDirectory.getAbsoluteFile().getCanonicalFile().getAbsolutePath();
+            String filePath = file.getAbsoluteFile().getCanonicalFile().getAbsolutePath();
+            if (!filePath.startsWith(rootPath)) {
+                throw new RuntimeException("File " + file + " is not in root directory " + rootDirectory);
+            }
+            return filePath.substring(rootPath.length());
+        } catch (IOException e) {
+            throw new RuntimeException("Error getting canonical path for " + rootDirectory + " or " + file, e);
+        }
+    }
+
+    /**
+     * Execute the task if necessary.
+     */
+    public void execute(@Nonnull Supplier<ChatCompletionBuilder> chatBuilderFactory, @Nonnull File rootDirectory) {
+        if (outputFile == null) {
+            throw new RuntimeException("No writeable output file given! " + outputFile);
+        }
+        outputFile.getParentFile().mkdirs();
+        if (!outputFile.canWrite()) {
+            throw new RuntimeException("No writeable output file given! " + outputFile);
+        }
+        if (StringUtils.isBlank(prompt)) {
+            throw new RuntimeException("No prompt given!");
+        }
+        String outputRelPath = relativePath(this.outputFile, rootDirectory);
+        if (!hasToBeRun()) {
+            LOG.info("Task does not have to be run for: {}", outputRelPath);
+            return;
+        }
+        ChatCompletionBuilder chat = chatBuilderFactory.get();
+        if (StringUtils.isNotBlank(systemMessage)) {
+            chat.systemMsg(prompt);
+        }
+        inputFiles.forEach(file -> {
+            // "Put it into the AI's mouth" pattern https://www.stoerr.net/blog/aimouth
+            chat.userMsg("Please return the content of " + relativePath(file, rootDirectory));
+            chat.assistantMsg(getFileContent(file));
+        });
+        chat.userMsg(prompt);
+        LOG.info("Chat for task execution for: {}\n{}", outputRelPath, chat.toJson());
+        String result = chat.execute();
+        LOG.info("Result for task execution for: {}\n{}", outputRelPath, result);
+        if (result.contains(FIXME)) {
+            throw new RuntimeException("AI returned FIXME for " + outputRelPath + " :\n" + result);
+        }
+        String outputVersion = DigestUtils.sha256Hex(result);
+        String versionComment = AIVersionMarker.create(outputVersion, calculateAllInputsMarkers());
+        String withVersionComment = embedComment(result, versionComment);
+
+        try {
+            Files.write(withVersionComment, outputFile, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException("Error writing file " + outputFile, e);
+        }
+        LOG.info("Wrote file " + outputFile.getAbsolutePath());
+    }
+
 }

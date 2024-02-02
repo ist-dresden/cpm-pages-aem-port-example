@@ -32,16 +32,20 @@ public class AIFileRepository {
 
     private AIFileRepository(String path) {
         sanityCheck();
-        directory = new File(path);
+        try {
+            directory = new File(path).getAbsoluteFile().getCanonicalFile();
+        } catch (IOException e) {
+            throw new IllegalStateException("Path " + path + " does not exist", e);
+        }
         if (!directory.isDirectory()) {
             throw new IllegalStateException("Directory " + directory + " does not exist");
         }
     }
 
     private static void sanityCheck() {
-        if (!new File("target").isDirectory() || !new File("pom.xml").isFile()) {
+        if (!new File("src/main/java").isDirectory() || !new File("pom.xml").isFile()) {
             // This might be actually OK, but seems more likely to be a mistake. Let's see.
-            throw new IllegalStateException("Something is wrong - we are not started in a maven project.");
+            throw new IllegalStateException("Something is wrong - we are not started in the maven project, but " + new File(".").getAbsolutePath());
         }
     }
 
@@ -113,4 +117,13 @@ public class AIFileRepository {
     public File javaFile(@Nonnull String fullName) {
         return new File(directory, fullName.replaceAll("[.]", "/") + ".java");
     }
+
+    /**
+     * File for documenting a full java class name.
+     */
+    @Nonnull
+    public File javaMdFile(@Nonnull String fullName) {
+        return new File(directory, fullName.replaceAll("[.]", "/") + ".md");
+    }
+
 }
