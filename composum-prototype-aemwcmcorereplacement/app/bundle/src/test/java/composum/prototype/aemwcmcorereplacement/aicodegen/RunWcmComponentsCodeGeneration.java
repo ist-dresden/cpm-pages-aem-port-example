@@ -46,6 +46,7 @@ public class RunWcmComponentsCodeGeneration {
         AITask task = new AITask();
         task.addInputFile(jcrContentApps.file("apps/core/wcm/components/text/v2/text/README.md"));
         task.addInputFiles(jcrContentApps.files("apps/core/wcm/components/text/v2/text", HTML_PATTERN, false));
+        task.setSystemMessage(aiPrompts.file("generalsystemmessage.prompt"));
         task.setPrompt(aiPrompts.file("generateModelAttributeList.md"), "MODELCLASS", modelClass);
         task.setOutputFile(javaDstDir.javaMdFile(modelClass));
         task.execute(this.chatBuilderFactory, new File("../.."));

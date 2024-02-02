@@ -51,12 +51,12 @@ class AIVersionMarker {
         String marker = content.substring(start + "AIGenVersion(".length(), end);
         String[] parts = marker.split(",");
         if (parts.length < 2) {
-            return new AIVersionMarker(parts[0], Collections.emptyList());
+            return new AIVersionMarker(parts[0].trim(), Collections.emptyList());
         }
-        String ourVersion = parts[0];
+        String ourVersion = parts[0].trim();
         List<String> inputversions = new ArrayList<>();
         for (int i = 1; i < parts.length; i++) {
-            inputversions.add(parts[i]);
+            inputversions.add(parts[i].trim());
         }
         return new AIVersionMarker(ourVersion, inputversions);
     }

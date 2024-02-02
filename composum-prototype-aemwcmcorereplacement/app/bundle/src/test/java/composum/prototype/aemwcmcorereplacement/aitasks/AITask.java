@@ -95,13 +95,17 @@ public class AITask {
 
     protected String embedComment(String content, String comment) {
         if (outputFile.getName().endsWith(".java")) {
-            return "// " + comment + "\n" + content;
+            return "// " + comment + "\n\n" + content;
         } else if (outputFile.getName().endsWith(".html")) {
-            return content + "\n<!-- " + comment + " -->\n";
+            return content + "\n\n<!-- " + comment + " -->\n";
         } else if (outputFile.getName().endsWith(".css")) {
-            return "/* " + comment + " */\n" + content;
-        } else {
+            return "/* " + comment + " */\n\n" + content;
+        } else if (outputFile.getName().endsWith(".md")) {
+            return "<!-- " + comment + " -->\n\n" + content;
+        } else if (outputFile.getName().endsWith(".sh")) {
             return "# " + comment + "\n" + content;
+        } else {
+            return "/* " + comment + " */\n\n" + content;
         }
     }
 
@@ -114,7 +118,8 @@ public class AITask {
             return true;
         }
         List<String> inputVersions = calculateAllInputsMarkers();
-        return !inputVersions.equals(outputVersionMarker.getInputversions());
+        List<String> oldInputVersions = outputVersionMarker.getInputversions();
+        return !inputVersions.equals(oldInputVersions);
     }
 
     @NotNull
@@ -144,7 +149,11 @@ public class AITask {
         if (aiVersionMarker != null) {
             return aiVersionMarker.getOurVersion();
         }
-        return file.getName() + "-" + DigestUtils.sha256Hex(content);
+        return file.getName() + "-" + shaHash(content);
+    }
+
+    protected String shaHash(String content) {
+        return DigestUtils.sha256Hex(content).substring(0, 10);
     }
 
     /**
@@ -245,7 +254,7 @@ public class AITask {
             throw new RuntimeException("No writeable output file given! " + outputFile);
         }
         outputFile.getParentFile().mkdirs();
-        if (!outputFile.canWrite()) {
+        if (outputFile.exists() && !outputFile.canWrite()) {
             throw new RuntimeException("No writeable output file given! " + outputFile);
         }
         if (StringUtils.isBlank(prompt)) {
@@ -272,7 +281,7 @@ public class AITask {
         if (result.contains(FIXME)) {
             throw new RuntimeException("AI returned FIXME for " + outputRelPath + " :\n" + result);
         }
-        String outputVersion = DigestUtils.sha256Hex(result);
+        String outputVersion = shaHash(result);
         String versionComment = AIVersionMarker.create(outputVersion, calculateAllInputsMarkers());
         String withVersionComment = embedComment(result, versionComment);
 
@@ -281,7 +290,7 @@ public class AITask {
         } catch (IOException e) {
             throw new RuntimeException("Error writing file " + outputFile, e);
         }
-        LOG.info("Wrote file " + outputFile.getAbsolutePath());
+        LOG.info("Wrote file file://" + outputFile.getAbsolutePath());
     }
 
 }

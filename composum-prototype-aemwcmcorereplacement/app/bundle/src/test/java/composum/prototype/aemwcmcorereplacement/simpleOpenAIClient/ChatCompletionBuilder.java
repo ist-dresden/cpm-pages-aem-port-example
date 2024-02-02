@@ -18,7 +18,7 @@ public class ChatCompletionBuilder {
     private static final String CHAT_COMPLETION_URL = "https://api.openai.com/v1/chat/completions";
     private String model = "gpt-3.5-turbo";
     private List<Message> messages = new ArrayList<>();
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private String openAiApiKey;
     private int maxTokens = 1000;
 
