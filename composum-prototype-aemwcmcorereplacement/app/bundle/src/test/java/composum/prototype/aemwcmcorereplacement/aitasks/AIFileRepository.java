@@ -24,10 +24,8 @@ import org.slf4j.LoggerFactory;
  */
 public class AIFileRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AIFileRepository.class);
-
     public static final String HTML_PATTERN = ".*\\.html";
-
+    private static final Logger LOG = LoggerFactory.getLogger(AIFileRepository.class);
     private final File directory;
 
     private AIFileRepository(String path) {

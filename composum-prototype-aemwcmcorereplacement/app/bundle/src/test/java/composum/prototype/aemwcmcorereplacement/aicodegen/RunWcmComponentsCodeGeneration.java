@@ -20,10 +20,8 @@ import composum.prototype.aemwcmcorereplacement.simpleOpenAIClient.ChatCompletio
  */
 public class RunWcmComponentsCodeGeneration {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RunWcmComponentsCodeGeneration.class);
-
     public static final String RELPATH_JCR_ROOT = "src/main/content/jcr_root";
-
+    private static final Logger LOG = LoggerFactory.getLogger(RunWcmComponentsCodeGeneration.class);
     protected final AIFileRepository jcrContentApps = AIFileRepository.fromPath("../package", RELPATH_JCR_ROOT);
 
     protected final AIFileRepository aiPrompts = AIFileRepository.fromPath("src/test/resources/aiprompts");
@@ -32,7 +30,7 @@ public class RunWcmComponentsCodeGeneration {
 
     // FIXME(hps,02.02.24) use gpt-4 in the end.
     protected final Supplier<ChatCompletionBuilder> chatBuilderFactory =
-            () -> new ChatCompletionBuilder().model("gpt-4");
+            () -> new ChatCompletionBuilder().model("gpt-4-turbo-preview");
 
     public static void main(String[] args) {
         new RunWcmComponentsCodeGeneration().run();

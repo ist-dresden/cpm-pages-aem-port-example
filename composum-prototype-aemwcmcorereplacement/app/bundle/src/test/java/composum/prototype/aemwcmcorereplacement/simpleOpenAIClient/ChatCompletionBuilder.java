@@ -16,9 +16,9 @@ import com.google.gson.GsonBuilder;
 public class ChatCompletionBuilder {
 
     private static final String CHAT_COMPLETION_URL = "https://api.openai.com/v1/chat/completions";
-    private String model = "gpt-3.5-turbo";
-    private List<Message> messages = new ArrayList<>();
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private String model = "gpt-4-turbo-preview";
+    private final List<Message> messages = new ArrayList<>();
     private String openAiApiKey;
     private int maxTokens = 1000;
 
@@ -70,14 +70,6 @@ public class ChatCompletionBuilder {
         return this;
     }
 
-    private ChatCompletionRequest build() {
-        return new ChatCompletionRequest(model, messages, 0, maxTokens);
-    }
-
-    public String toJson() {
-        return gson.toJson(build());
-    }
-
     /**
      * Calls OpenAI chat completion service and returns the answer.
      */
@@ -98,6 +90,14 @@ public class ChatCompletionBuilder {
         } catch (java.io.IOException | java.lang.InterruptedException e) {
             throw new IllegalStateException("Could not send request to OpenAI", e);
         }
+    }
+
+    public String toJson() {
+        return gson.toJson(build());
+    }
+
+    private ChatCompletionRequest build() {
+        return new ChatCompletionRequest(model, messages, 0, maxTokens);
     }
 
     /**

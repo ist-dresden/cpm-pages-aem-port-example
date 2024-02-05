@@ -48,28 +48,31 @@ import composum.prototype.aemwcmcorereplacement.simpleOpenAIClient.ChatCompletio
  * Normally the intermediate and final results should be checked in with Git. That ensures manual checks when
  * they are regenerated, and minimizes regeneration.
  */
-public class AITask {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AITask.class);
+public class AITask implements Cloneable {
 
     /**
      * A marker that can be inserted by the AI when something is wrong / unclear. We will make sure the user
+     * sees that by aborting.
      */
     public static final String FIXME = "FIXME";
 
-    private List<File> inputFiles = new ArrayList<>();
+    /**
+     * A pattern that matches the license header, which we want to remove to avoid clutter.
+     */
+    protected static final Pattern PATTERN_LICENCE =
+            Pattern.compile("\\A<!--(?s).*?Copyright.*?Adobe.*?Licensed under.*?-->");
+
+    private static final Logger LOG = LoggerFactory.getLogger(AITask.class);
+    private final List<File> inputFiles = new ArrayList<>();
     private File outputFile;
     private String prompt;
     private File promptFile;
     private String systemMessage;
     private File systemMessageFile;
 
-    public AITask addInputFile(File file) {
-        if (!file.exists()) {
-            throw new RuntimeException("File " + file + " does not exist");
-        }
-        inputFiles.add(file);
-        return this;
+    @Override
+    public AITask clone() throws CloneNotSupportedException {
+        return (AITask) super.clone();
     }
 
     public AITask addOptionalInputFile(@Nullable File file) {
@@ -85,6 +88,14 @@ public class AITask {
         for (File file : files) {
             addInputFile(file);
         }
+        return this;
+    }
+
+    public AITask addInputFile(File file) {
+        if (!file.exists()) {
+            throw new RuntimeException("File " + file + " does not exist");
+        }
+        inputFiles.add(file);
         return this;
     }
 
@@ -181,29 +192,6 @@ public class AITask {
     }
 
     /**
-     * A pattern that matches the license header, which we want to remove to avoid clutter.
-     */
-    public static final Pattern PATTERN_LICENCE =
-            Pattern.compile("\\A<!--(?s).*?Copyright.*?Adobe.*?Licensed under.*?-->");
-
-    protected String getFileContent(@Nonnull File file) {
-        if (!file.exists()) {
-            return null;
-        }
-        try {
-            String content = Files.toString(file, StandardCharsets.UTF_8);
-            Matcher matcher = PATTERN_LICENCE.matcher(content);
-            if (matcher.find()) {
-                content = matcher.replaceFirst("");
-            }
-            return content;
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading file " + file, e);
-        }
-    }
-
-
-    /**
      * The actual prompt to be executed. The prompt file content can contain placeholders that are replaced by the values given: placeholdersAndValues contain alternatingly placeholder names and values for them.
      *
      * @return
@@ -224,6 +212,22 @@ public class AITask {
         return this;
     }
 
+    protected String getFileContent(@Nonnull File file) {
+        if (!file.exists()) {
+            return null;
+        }
+        try {
+            String content = Files.toString(file, StandardCharsets.UTF_8);
+            Matcher matcher = PATTERN_LICENCE.matcher(content);
+            if (matcher.find()) {
+                content = matcher.replaceFirst("");
+            }
+            return content;
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading file " + file, e);
+        }
+    }
+
     public AITask setSystemMessage(@Nonnull File systemMessageFile) {
         String systemMessage = getFileContent(systemMessageFile);
         if (systemMessage == null) {
@@ -232,19 +236,6 @@ public class AITask {
         this.systemMessage = systemMessage;
         this.systemMessageFile = systemMessageFile;
         return this;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("AITask{");
-        sb.append("inputFiles=").append(inputFiles);
-        sb.append(", outputFile=").append(outputFile);
-        sb.append(", systemMessageFile=").append(systemMessageFile);
-        sb.append(", systemMessage='").append(systemMessage).append('\'');
-        sb.append(", promptFile=").append(promptFile);
-        sb.append(", prompt='").append(prompt).append('\'');
-        sb.append('}');
-        return sb.toString();
     }
 
     protected String relativePath(@Nullable File file, @Nonnull File rootDirectory) {
@@ -315,6 +306,18 @@ public class AITask {
         }
         LOG.info("Wrote file file://" + outputFile.getAbsolutePath());
         return this;
+    }
+
+    @Override
+    public String toString() {
+        String sb = "AITask{" + "inputFiles=" + inputFiles +
+                ", outputFile=" + outputFile +
+                ", systemMessageFile=" + systemMessageFile +
+                ", systemMessage='" + systemMessage + '\'' +
+                ", promptFile=" + promptFile +
+                ", prompt='" + prompt + '\'' +
+                '}';
+        return sb;
     }
 
 }

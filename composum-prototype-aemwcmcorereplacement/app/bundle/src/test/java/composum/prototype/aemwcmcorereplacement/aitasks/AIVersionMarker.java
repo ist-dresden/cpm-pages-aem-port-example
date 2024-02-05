@@ -24,14 +24,6 @@ class AIVersionMarker {
         this.inputversions = inputversions != null ? inputversions : Collections.emptyList();
     }
 
-    public String getOurVersion() {
-        return ourVersion;
-    }
-
-    public List<String> getInputversions() {
-        return inputversions;
-    }
-
     /**
      * Look for marker somewhere in the content.
      */
@@ -61,6 +53,24 @@ class AIVersionMarker {
         return new AIVersionMarker(ourVersion, inputversions);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getOurVersion(), getInputversions());
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof AIVersionMarker)) return false;
+        AIVersionMarker that = (AIVersionMarker) object;
+        return Objects.equals(getOurVersion(), that.getOurVersion()) && Objects.equals(getInputversions(), that.getInputversions());
+    }
+
+    @Override
+    public String toString() {
+        return create(ourVersion, inputversions);
+    }
+
     /**
      * Creates a marker like AIGenVersion(ourversion, inputfile1@version1, inputfile2@version2, ...) .
      */
@@ -76,22 +86,11 @@ class AIVersionMarker {
         return sb.toString();
     }
 
-
-    @Override
-    public String toString() {
-        return create(ourVersion, inputversions);
+    public String getOurVersion() {
+        return ourVersion;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (!(object instanceof AIVersionMarker)) return false;
-        AIVersionMarker that = (AIVersionMarker) object;
-        return Objects.equals(getOurVersion(), that.getOurVersion()) && Objects.equals(getInputversions(), that.getInputversions());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getOurVersion(), getInputversions());
+    public List<String> getInputversions() {
+        return inputversions;
     }
 }
