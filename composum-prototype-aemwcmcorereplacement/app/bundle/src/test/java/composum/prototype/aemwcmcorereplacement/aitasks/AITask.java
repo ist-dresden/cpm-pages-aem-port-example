@@ -298,11 +298,11 @@ public class AITask implements Cloneable {
         }
         ChatCompletionBuilder chat = chatBuilderFactory.get();
         if (StringUtils.isNotBlank(systemMessage)) {
-            chat.systemMsg(prompt);
+            chat.systemMsg(systemMessage);
         }
         inputFiles.forEach(file -> {
             // "Put it into the AI's mouth" pattern https://www.stoerr.net/blog/aimouth
-            chat.userMsg("Please return the content of " + relativePath(file, rootDirectory));
+            chat.userMsg("Please retrieve and print the content of " + relativePath(file, rootDirectory));
             chat.assistantMsg( unclutter(getFileContent(file)));
         });
         chat.userMsg(prompt);

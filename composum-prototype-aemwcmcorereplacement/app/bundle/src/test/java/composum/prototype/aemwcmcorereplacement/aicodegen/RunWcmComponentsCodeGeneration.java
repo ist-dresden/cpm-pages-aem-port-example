@@ -3,6 +3,7 @@ package composum.prototype.aemwcmcorereplacement.aicodegen;
 import static composum.prototype.aemwcmcorereplacement.aitasks.AIFileRepository.HTML_PATTERN;
 
 import java.io.File;
+import java.util.List;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -20,22 +21,28 @@ import composum.prototype.aemwcmcorereplacement.simpleOpenAIClient.ChatCompletio
  */
 public class RunWcmComponentsCodeGeneration {
 
+    public static final File ROOT_DIRECTORY = new File("../..");
+
     public static final String RELPATH_JCR_ROOT = "src/main/content/jcr_root";
     private static final Logger LOG = LoggerFactory.getLogger(RunWcmComponentsCodeGeneration.class);
-    public static final File ROOT_DIRECTORY = new File("../..");
+
     protected final AIFileRepository jcrContentApps = AIFileRepository.fromPath("../package", RELPATH_JCR_ROOT);
 
     protected final AIFileRepository aiPrompts = AIFileRepository.fromPath("src/test/resources/aiprompts");
 
     protected final AIFileRepository javaDstDir = AIFileRepository.fromPath("src/aigenerated/java");
 
-    // FIXME(hps,02.02.24) use gpt-4 in the end.
+    protected final AIFileRepository javaScrDir = AIFileRepository.fromPath("src/main/java");
+
     protected final Supplier<ChatCompletionBuilder> chatBuilderFactory =
             () -> new ChatCompletionBuilder().model("gpt-4-turbo-preview");
 
     public static void main(String[] args) {
-        new RunWcmComponentsCodeGeneration().run();
-        LOG.info("Done.");
+        try {
+            new RunWcmComponentsCodeGeneration().run();
+        } finally {
+            LOG.info("Done.");
+        }
     }
 
     protected void run() {
@@ -48,17 +55,34 @@ public class RunWcmComponentsCodeGeneration {
      */
     protected void generateTextModel() {
         String modelClass = "com.adobe.cq.wcm.core.components.models.Text";
+        File systemMessage = aiPrompts.file("generalsystemmessage.prompt");
+        File componentReadme = jcrContentApps.file("apps/core/wcm/components/text/v2/text/README.md");
+        List<File> componentHTL = jcrContentApps.files("apps/core/wcm/components/text/v2/text", HTML_PATTERN, false);
+        File createSpecPrompt = aiPrompts.file("generateModelAttributeList.md");
+        File specFile = javaDstDir.javaMdFile(modelClass);
         AITask createModelDescription = new AITask()
-                .setSystemMessage(aiPrompts.file("generalsystemmessage.prompt"))
-                .addInputFile(jcrContentApps.file("apps/core/wcm/components/text/v2/text/README.md"))
-                .addInputFiles(jcrContentApps.files("apps/core/wcm/components/text/v2/text", HTML_PATTERN, false))
-                .setPrompt(aiPrompts.file("generateModelAttributeList.md"), "MODELCLASS", modelClass)
-                .setOutputFile(javaDstDir.javaMdFile(modelClass))
+                .setSystemMessage(systemMessage)
+                .addInputFile(componentReadme)
+                .addInputFiles(componentHTL)
+                .setPrompt(createSpecPrompt, "MODELCLASS", modelClass)
+                .setOutputFile(specFile)
                 .execute(this.chatBuilderFactory, ROOT_DIRECTORY);
 //        String question = "What about      data-cmp-data-layer=\"${textModel.data.json}\" - why did we not include this? What do I need to change in the prompt so that it'd get included?";
 //        String explanation = createModelDescription.explain(chatBuilderFactory, ROOT_DIRECTORY,
 //                question);
 //        System.out.printf("Explanation of %s%n%n%s%n", question, explanation);
+
+        File parentClassFile = javaScrDir.javaFile("com.adobe.cq.wcm.core.components.models.AbstractComponent");
+        File javaFile = javaDstDir.javaFile(modelClass);
+        File createJavaPrompt = aiPrompts.file("generateModelClass.md");
+        AITask createJavaClass = new AITask()
+                .setSystemMessage(systemMessage)
+                .addInputFiles(componentHTL)
+                .addInputFile(parentClassFile)
+                .addInputFile(specFile)
+                .setPrompt(createJavaPrompt, "MODELCLASS", modelClass)
+                .setOutputFile(javaFile)
+                .execute(this.chatBuilderFactory, ROOT_DIRECTORY);
     }
 
 }

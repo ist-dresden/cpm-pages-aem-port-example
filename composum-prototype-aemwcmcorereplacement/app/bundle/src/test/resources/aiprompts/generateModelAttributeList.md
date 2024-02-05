@@ -1,8 +1,8 @@
-<!-- AIGenVersion(1.2) -->
+<!-- AIGenVersion(1.3) -->
 Consider the retrieved README.md and the retrieved Sightly / HTL *.html files for information about the Apache Sling
-model `com.adobe.cq.wcm.core.components.models.Text`. Generate a specification for the code this model needs to be
+model `MODELCLASS`. Generate a specification for the code this model needs to be
 created. Look for the `data-sly-use` declaration of a Sling model with
-class `com.adobe.cq.wcm.core.components.models.Text`, and usages of these declared models in expressions in the *.html
+class `MODELCLASS`, and usages of these declared models in expressions in the *.html
 files, including properties related to data layers, analytics, or any other functionalities not directly tied to JCR
 attributes.
 
@@ -13,16 +13,17 @@ etc. This is crucial for a complete specification, as it ensures the model suppo
 the HTML files, including but not limited to content rendering.
 
 In the retrieved README.md, the section `### Use Object` contains the JCR attributes that need to be read by the class
-model later. If the members of `com.adobe.cq.wcm.core.components.models.Text` match any of these attributes, then denote
+model later. If the members of `MODELCLASS` match any of these attributes, then denote
 that in the table. Additionally, include any properties used for functionalities like data layers, analytics, etc., even
 if they are not directly tied to a JCR attribute.
 
 Output a Markdown document with the following information:
 
-1. The short description from the README.md
-2. The classname listed in '### Use Object' in the README.md
-3. Output all usages of models with that class in the *.html files.
-4. A table with the following columns:
+1. The headline "Specification for `MODELCLASS`"
+2. The short description from the README.md
+3. The classname listed in '### Use Object' in the README.md
+4. Output all usages of models with that class in the *.html files.
+5. A table with the following columns:
     - `jcr attribute` : the JCR attribute that is returned by the java property, as listed in README.md
     - `java property` : the Java property name as determined from usage as Sling Models model the .html files.
       IMPORTANT: only when it is actually used in a .html file!
