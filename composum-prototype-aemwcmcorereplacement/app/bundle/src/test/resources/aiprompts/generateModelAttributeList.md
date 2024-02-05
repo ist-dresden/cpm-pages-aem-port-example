@@ -1,13 +1,21 @@
 <!-- AIGenVersion(1.2) -->
-Consider the retrieved README.md and the retrieved Sightly / HTL *.html files for information about the
-Apache Sling model `MODELCLASS` . Generate a specification for the code this model to be created.
-Look for the `data-sly-use` declaration of a Sling model with class `MODELCLASS`, and usages of these declared
-models in expressions in the *.html files.
+Consider the retrieved README.md and the retrieved Sightly / HTL *.html files for information about the Apache Sling
+model `com.adobe.cq.wcm.core.components.models.Text`. Generate a specification for the code this model needs to be
+created. Look for the `data-sly-use` declaration of a Sling model with
+class `com.adobe.cq.wcm.core.components.models.Text`, and usages of these declared models in expressions in the *.html
+files, including properties related to data layers, analytics, or any other functionalities not directly tied to JCR
+attributes.
 
-Describe in a table all members of the model that need to be declared in the code of the model
-so that the *.html files compile properly.
-In the retrieved README.md the section `### Use Object` contains the JCR attributes that need to be read by the class
-model later. If the members of MODELCLASS match any of these attributes, then denote that in the table.
+Describe in a table all members of the model that need to be declared in the code of the model so that the *.html
+files compile properly. Include all members of the model that are used in the HTML files, not only those
+tied to JCR attributes but also those utilized for advanced features or integrations such as data layers, analytics,
+etc. This is crucial for a complete specification, as it ensures the model supports all functionalities demonstrated in
+the HTML files, including but not limited to content rendering.
+
+In the retrieved README.md, the section `### Use Object` contains the JCR attributes that need to be read by the class
+model later. If the members of `com.adobe.cq.wcm.core.components.models.Text` match any of these attributes, then denote
+that in the table. Additionally, include any properties used for functionalities like data layers, analytics, etc., even
+if they are not directly tied to a JCR attribute.
 
 Output a Markdown document with the following information:
 
