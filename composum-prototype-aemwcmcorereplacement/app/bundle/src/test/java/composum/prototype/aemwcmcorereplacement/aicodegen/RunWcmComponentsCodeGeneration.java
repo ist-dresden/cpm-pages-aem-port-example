@@ -22,6 +22,7 @@ public class RunWcmComponentsCodeGeneration {
 
     public static final String RELPATH_JCR_ROOT = "src/main/content/jcr_root";
     private static final Logger LOG = LoggerFactory.getLogger(RunWcmComponentsCodeGeneration.class);
+    public static final File ROOT_DIRECTORY = new File("../..");
     protected final AIFileRepository jcrContentApps = AIFileRepository.fromPath("../package", RELPATH_JCR_ROOT);
 
     protected final AIFileRepository aiPrompts = AIFileRepository.fromPath("src/test/resources/aiprompts");
@@ -53,7 +54,11 @@ public class RunWcmComponentsCodeGeneration {
                 .addInputFiles(jcrContentApps.files("apps/core/wcm/components/text/v2/text", HTML_PATTERN, false))
                 .setPrompt(aiPrompts.file("generateModelAttributeList.md"), "MODELCLASS", modelClass)
                 .setOutputFile(javaDstDir.javaMdFile(modelClass))
-                .execute(this.chatBuilderFactory, new File("../.."));
+                .execute(this.chatBuilderFactory, ROOT_DIRECTORY);
+        String question = "What about      data-cmp-data-layer=\"${textModel.data.json}\" - why did we not include this?";
+        String explanation = createModelDescription.explain(chatBuilderFactory, ROOT_DIRECTORY,
+                question);
+        System.out.printf("Explanation of %s%n%n%s%n", question, explanation);
     }
 
 }

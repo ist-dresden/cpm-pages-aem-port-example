@@ -15,7 +15,7 @@ of each task is one text file. A complex task can have several steps leading to 
 
 Since ChatGPT is not particularily fast not free and the generation results have to be manually checked, this is
 heavily cached.
-Into each output file we write the versions of all the input files from which it was generated into a comment. 
+Into each output file we write the versions of all the input files from which it was generated into a comment.
 When the tasks are run, we compare the
 versions of all the input files with the versions recorded in the comment, and only regenerate the output file if
 the versions have changed. An input file can have a version comment that explicitly states the version, or we take the
@@ -36,10 +36,24 @@ they are regenerated, and minimizes regeneration.
 ### Task chaining
 
 The AI processing is done by generating a task list programmatically (with some DSL), and then traversing the tasks.
-Each task is reexecuted when the input versions do not match the recorded input versions or the target file is not 
-there. For simplicity, we rely on the user to create and execute the tasks in an order that represents their 
+Each task is reexecuted when the input versions do not match the recorded input versions or the target file is not
+there. For simplicity, we rely on the user to create and execute the tasks in an order that represents their
 depencence.
 
 ### An example
 
 TODO: make specific example for model generation.
+
+### Limitations and additional ideas
+
+- It'd be nice to be able to continue the conversation - that provides an implicit explanation for the added artifacts.
+- This means the resulting file is always completely regenerated. How to make differential changes? One idea would 
+  be to give the previous file to the AI and ask it to make minimal changes.
+- In general: framework / strategy to fix things.
+  - support to ask explanations for things that go wrong / get suggestions for prompt changes
+
+#### Possible restructuring
+
+- The AITask might just be a wrapper around the ChatCompletionBuilder. This also makes it easy to ask for an
+  explanation afterwards, or simply continue the conversation.
+- Admit other AIs than OpenAI. (Local models?)

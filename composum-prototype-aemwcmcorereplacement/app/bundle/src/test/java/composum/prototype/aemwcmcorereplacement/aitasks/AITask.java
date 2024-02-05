@@ -1,5 +1,7 @@
 package composum.prototype.aemwcmcorereplacement.aitasks;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -100,9 +102,7 @@ public class AITask implements Cloneable {
     }
 
     public AITask setOutputFile(@Nonnull File file) {
-        if (file == null) {
-            throw new RuntimeException("File must not be null");
-        }
+        requireNonNull(file, "File must not be null");
         outputFile = file;
         return this;
     }
@@ -156,9 +156,7 @@ public class AITask implements Cloneable {
 
     protected String determineFileVersionMarker(@Nonnull File file) {
         String content = getFileContent(file);
-        if (content == null) {
-            throw new RuntimeException("Could not read file " + file);
-        }
+        requireNonNull(content, "Could not read file " + file);
         AIVersionMarker aiVersionMarker = AIVersionMarker.find(content);
         String version;
         if (aiVersionMarker != null) {
@@ -198,9 +196,7 @@ public class AITask implements Cloneable {
      */
     public AITask setPrompt(@Nonnull File promptFile, String... placeholdersAndValues) {
         String prompt = getFileContent(promptFile);
-        if (prompt == null) {
-            throw new RuntimeException("Could not read prompt file " + promptFile);
-        }
+        requireNonNull(prompt, "Could not read prompt file " + promptFile);
         if (placeholdersAndValues.length % 2 != 0) {
             throw new RuntimeException("Odd number of placeholdersAndValues");
         }
@@ -230,9 +226,7 @@ public class AITask implements Cloneable {
 
     public AITask setSystemMessage(@Nonnull File systemMessageFile) {
         String systemMessage = getFileContent(systemMessageFile);
-        if (systemMessage == null) {
-            throw new RuntimeException("Could not read system message file " + systemMessageFile);
-        }
+        requireNonNull(systemMessage, "Could not read system message file " + systemMessageFile);
         this.systemMessage = systemMessage;
         this.systemMessageFile = systemMessageFile;
         return this;
@@ -242,9 +236,7 @@ public class AITask implements Cloneable {
         if (file == null) {
             return null;
         }
-        if (rootDirectory == null) {
-            throw new RuntimeException("Root directory must not be null");
-        }
+        requireNonNull(rootDirectory, "Root directory must not be null");
         String rootPath = null;
         try {
             rootPath = rootDirectory.getAbsoluteFile().getCanonicalFile().getAbsolutePath();
@@ -259,37 +251,15 @@ public class AITask implements Cloneable {
     }
 
     /**
-     * Execute the task if necessary.
-     *
-     * @return
+     * Execute the task if necessary. If the output file is already there and up to date, nothing is done.
      */
     public AITask execute(@Nonnull Supplier<ChatCompletionBuilder> chatBuilderFactory, @Nonnull File rootDirectory) {
-        if (outputFile == null) {
-            throw new RuntimeException("No writeable output file given! " + outputFile);
-        }
-        outputFile.getParentFile().mkdirs();
-        if (outputFile.exists() && !outputFile.canWrite()) {
-            throw new RuntimeException("No writeable output file given! " + outputFile);
-        }
-        if (StringUtils.isBlank(prompt)) {
-            throw new RuntimeException("No prompt given!");
-        }
         String outputRelPath = relativePath(this.outputFile, rootDirectory);
         if (!hasToBeRun()) {
             LOG.info("Task does not have to be run for: {}", outputRelPath);
-            return null;
+            return this;
         }
-        ChatCompletionBuilder chat = chatBuilderFactory.get();
-        if (StringUtils.isNotBlank(systemMessage)) {
-            chat.systemMsg(prompt);
-        }
-        inputFiles.forEach(file -> {
-            // "Put it into the AI's mouth" pattern https://www.stoerr.net/blog/aimouth
-            chat.userMsg("Please return the content of " + relativePath(file, rootDirectory));
-            chat.assistantMsg(getFileContent(file));
-        });
-        chat.userMsg(prompt);
-        LOG.info("Executing chat for: {}\n{}", outputRelPath, chat.toJson());
+        ChatCompletionBuilder chat = makeChatBuilder(chatBuilderFactory, rootDirectory, outputRelPath);
         String result = chat.execute();
         LOG.info("Result for task execution for: {}\n{}", outputRelPath, result);
         if (result.contains(FIXME)) {
@@ -308,16 +278,64 @@ public class AITask implements Cloneable {
         return this;
     }
 
+    @NotNull
+    protected ChatCompletionBuilder makeChatBuilder(@NotNull Supplier<ChatCompletionBuilder> chatBuilderFactory, @NotNull File rootDirectory, String outputRelPath) {
+        requireNonNull(outputFile, "No writeable output file given! " + outputFile);
+        outputFile.getParentFile().mkdirs();
+        if (outputFile.exists() && !outputFile.canWrite()) {
+            throw new RuntimeException("No writeable output file given! " + outputFile);
+        }
+        if (StringUtils.isBlank(prompt)) {
+            throw new RuntimeException("No prompt given!");
+        }
+        ChatCompletionBuilder chat = chatBuilderFactory.get();
+        if (StringUtils.isNotBlank(systemMessage)) {
+            chat.systemMsg(prompt);
+        }
+        inputFiles.forEach(file -> {
+            // "Put it into the AI's mouth" pattern https://www.stoerr.net/blog/aimouth
+            chat.userMsg("Please return the content of " + relativePath(file, rootDirectory));
+            chat.assistantMsg(getFileContent(file));
+        });
+        chat.userMsg(prompt);
+        LOG.info("Executing chat for: {}\n{}", outputRelPath, chat.toJson());
+        return chat;
+    }
+
+    /**
+     * Ask a question about the previous task execution. We assume it was previously run ({@link #hasToBeRun()} == false),
+     * add the result of the previous execution to the chat, and ask the AI the given question about it.
+     * This can be used e.g. to see why the AI did something, or in the process of improving the prompt, etc.
+     *
+     * @return the answer of the AI - not written to a file!
+     */
+    public String explain(@Nonnull Supplier<ChatCompletionBuilder> chatBuilderFactory, @Nonnull File rootDirectory, @Nonnull String question) {
+        String outputRelPath = relativePath(this.outputFile, rootDirectory);
+        if (hasToBeRun()) { // that's not strictly necessary, but if not that's a likely mistake
+            throw new RuntimeException("Task has to be already run for: " + outputRelPath);
+        }
+        ChatCompletionBuilder chat = makeChatBuilder(chatBuilderFactory, rootDirectory, outputRelPath);
+        String previousOutput = getFileContent(outputFile);
+        requireNonNull(previousOutput, "Could not read any content from file " + outputFile);
+        chat.assistantMsg(previousOutput);
+        chat.userMsg(question);
+        String result = chat.execute();
+        LOG.info("Explanation result for {} with question {} is:\n{}", outputRelPath, question, result);
+        if (result.contains(FIXME)) {
+            throw new RuntimeException("AI returned FIXME for " + outputRelPath + " :\n" + result);
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
-        String sb = "AITask{" + "inputFiles=" + inputFiles +
+        return "AITask{" + "inputFiles=" + inputFiles +
                 ", outputFile=" + outputFile +
                 ", systemMessageFile=" + systemMessageFile +
                 ", systemMessage='" + systemMessage + '\'' +
                 ", promptFile=" + promptFile +
                 ", prompt='" + prompt + '\'' +
                 '}';
-        return sb;
     }
 
 }

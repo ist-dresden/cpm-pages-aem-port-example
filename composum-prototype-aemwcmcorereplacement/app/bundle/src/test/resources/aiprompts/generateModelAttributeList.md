@@ -3,6 +3,8 @@ Consider the retrieved README.md and the retrieved Sightly / HTL *.html files fo
 In the README.md the section `### Use Object` contains the JCR attributes that need to be read by the class
 MODELCLASS later, and the *.html file can show you which java property will be used
 to access those attributes - look for the `data-sly-use` declaration of a Sling model with the MODELCLASS.
+It is also important to include any methods of MODELCLASS that are used in the *.html files that are not 
+directly related to JCR properties, since we'd otherwise get compile errors for the *.html .  
 
 Output a markdown document with the following information:
 

@@ -1,17 +1,14 @@
-<!-- AIGenVersion(a056af36ea, generalsystemmessage.prompt-fc686cf465, generateModelAttributeList.md-1.0, README.md-7c5fdf2c99, text.html-f02476e7ef) -->
+<!-- AIGenVersion(bdf1a146eb, generalsystemmessage.prompt-1.0, generateModelAttributeList.md-1.0, README.md-7c5fdf2c99, text.html-f02476e7ef) -->
 
-# com.adobe.cq.wcm.core.components.models.Text
+Text (v2)
+====
+Text component written in HTL that provides a section of rich text.
 
-## Short Description
-The Text component is written in HTL and provides a section of rich text. It supports in-place editing, a rich text editor, and styles.
+### Use Object
+The Text component uses the `com.adobe.cq.wcm.core.components.models.Text` Sling model as its Use-object.
 
-## Classname
-The classname used in the 'Use Object' is `com.adobe.cq.wcm.core.components.models.Text`.
-
-## Attributes and Properties
-
-| JCR Attribute | Java Property | Description                                                     |
-|-------------|---------------|-----------------------------------------------------------------|
-| `./text`         | text           | The actual text to be rendered                                 |
-| `./textIsRich`         | isRichText           | Flag determining if the rendered text is rich or not, useful for applying the correct HTL display context       |
-| `./id`         | id           | Defines the component HTML ID attribute |
+| JCR Attribute | Java Property | Description                                                                 |
+|---------------|---------------|-----------------------------------------------------------------------------|
+| ./text        | text          | the actual text to be rendered                                              |
+| ./textIsRich  | isRichText    | flag determining if the rendered text is rich or not, useful for applying the correct HTL display context |
+| ./id          | id            | defines the component HTML ID attribute.                                    |
