@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
@@ -11,6 +12,9 @@ import javax.annotation.Nullable;
  * A parsing / creation class for markers like AIGenVersion(ourversion, inputfile1@version1, inputfile2@version2, ...) .
  */
 class AIVersionMarker {
+
+    /** A pattern that matches the version markers generated here. */
+    public static final Pattern VERSION_MARKER_PATTERN = Pattern.compile("AIGenVersion\\([^)]+\\)");
 
     private final String ourVersion;
 

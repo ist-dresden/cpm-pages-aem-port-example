@@ -1,26 +1,33 @@
-<!-- AIGenVersion(1.0) -->
-Consider the retrieved README.md and the retrieved Sightly / HTL *.html files for information about the MODELCLASS .
-In the README.md the section `### Use Object` contains the JCR attributes that need to be read by the class
-MODELCLASS later, and the *.html file can show you which java property will be used
-to access those attributes - look for the `data-sly-use` declaration of a Sling model with the MODELCLASS.
-It is also important to include any methods of MODELCLASS that are used in the *.html files that are not 
-directly related to JCR properties, since we'd otherwise get compile errors for the *.html .  
+<!-- AIGenVersion(1.2) -->
+Consider the retrieved README.md and the retrieved Sightly / HTL *.html files for information about the
+Apache Sling model `MODELCLASS` . Generate a specification for the code this model to be created.
+Look for the `data-sly-use` declaration of a Sling model with class `MODELCLASS`, and usages of these declared
+models in expressions in the *.html files.
 
-Output a markdown document with the following information:
+Describe in a table all members of the model that need to be declared in the code of the model
+so that the *.html files compile properly.
+In the retrieved README.md the section `### Use Object` contains the JCR attributes that need to be read by the class
+model later. If the members of MODELCLASS match any of these attributes, then denote that in the table.
+
+Output a Markdown document with the following information:
 
 1. The short description from the README.md
 2. The classname listed in '### Use Object' in the README.md
-3. A table with the following columns:
+3. Output all usages of models with that class in the *.html files.
+4. A table with the following columns:
     - `jcr attribute` : the JCR attribute that is returned by the java property, as listed in README.md
-    - `java property` : the Java property name as determined from usage as Sling Models model the .html files. 
+    - `java property` : the Java property name as determined from usage as Sling Models model the .html files.
       IMPORTANT: only when it is actually used in a .html file!
     - `description` : the description of the jcr attribute, as listed in the README.
 
-Example for the table, where bar is not used in a Java property of the Sling Model and id is used but not in a JCR 
-property:  
+IMPORTANT: include all members of the model that are used in the HTML, even if they are not tied to a JCR attribute,
+since we'll otherwise get compilation errors!
+
+Example for the table, where bar is not used in a Java property of the Sling Model and id is used but not in a JCR
+property:
 
 | JCR Attribute | Java Property | Description                                                     |
-|-------------|---------------|-----------------------------------------------------------------|
-| foo         | foo           | a foo to be used as thingamagic                                 |
-| bar         |               | flag for the type of the foo which is not used in a .html       |
-|             | id            | generated id used in a .html but not mentioned in the README.md |
+|---------------|---------------|-----------------------------------------------------------------|
+| foo           | foo           | a foo to be used as thingamagic                                 |
+| bar           |               | flag for the type of the foo which is not used in a .html       |
+|               | id            | generated id used in a .html but not mentioned in the README.md |

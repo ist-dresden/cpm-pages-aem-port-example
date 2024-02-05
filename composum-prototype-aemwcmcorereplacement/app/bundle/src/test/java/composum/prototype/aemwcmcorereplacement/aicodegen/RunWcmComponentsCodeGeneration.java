@@ -55,7 +55,7 @@ public class RunWcmComponentsCodeGeneration {
                 .setPrompt(aiPrompts.file("generateModelAttributeList.md"), "MODELCLASS", modelClass)
                 .setOutputFile(javaDstDir.javaMdFile(modelClass))
                 .execute(this.chatBuilderFactory, ROOT_DIRECTORY);
-        String question = "What about      data-cmp-data-layer=\"${textModel.data.json}\" - why did we not include this?";
+        String question = "What about      data-cmp-data-layer=\"${textModel.data.json}\" - why did we not include this? What do I need to change in the prompt so that it'd get included?";
         String explanation = createModelDescription.explain(chatBuilderFactory, ROOT_DIRECTORY,
                 question);
         System.out.printf("Explanation of %s%n%n%s%n", question, explanation);

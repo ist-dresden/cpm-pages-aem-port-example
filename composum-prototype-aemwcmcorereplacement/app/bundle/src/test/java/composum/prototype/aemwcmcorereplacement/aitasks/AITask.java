@@ -195,7 +195,7 @@ public class AITask implements Cloneable {
      * @return
      */
     public AITask setPrompt(@Nonnull File promptFile, String... placeholdersAndValues) {
-        String prompt = getFileContent(promptFile);
+        String prompt = unclutter(getFileContent(promptFile));
         requireNonNull(prompt, "Could not read prompt file " + promptFile);
         if (placeholdersAndValues.length % 2 != 0) {
             throw new RuntimeException("Odd number of placeholdersAndValues");
@@ -213,19 +213,27 @@ public class AITask implements Cloneable {
             return null;
         }
         try {
-            String content = Files.toString(file, StandardCharsets.UTF_8);
-            Matcher matcher = PATTERN_LICENCE.matcher(content);
-            if (matcher.find()) {
-                content = matcher.replaceFirst("");
-            }
-            return content;
+            return Files.toString(file, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException("Error reading file " + file, e);
         }
     }
 
+    /* Remove some clutter that is not relevant and might even confuse the AI */
+    protected static String unclutter(String content) {
+        Matcher matcher = PATTERN_LICENCE.matcher(content);
+        if (matcher.find()) {
+            content = matcher.replaceFirst("");
+        }
+        matcher = AIVersionMarker.VERSION_MARKER_PATTERN.matcher(content);
+        if (matcher.find()) {
+            content = matcher.replaceFirst("");
+        }
+        return content;
+    }
+
     public AITask setSystemMessage(@Nonnull File systemMessageFile) {
-        String systemMessage = getFileContent(systemMessageFile);
+        String systemMessage = unclutter(getFileContent(systemMessageFile));
         requireNonNull(systemMessage, "Could not read system message file " + systemMessageFile);
         this.systemMessage = systemMessage;
         this.systemMessageFile = systemMessageFile;
@@ -295,7 +303,7 @@ public class AITask implements Cloneable {
         inputFiles.forEach(file -> {
             // "Put it into the AI's mouth" pattern https://www.stoerr.net/blog/aimouth
             chat.userMsg("Please return the content of " + relativePath(file, rootDirectory));
-            chat.assistantMsg(getFileContent(file));
+            chat.assistantMsg( unclutter(getFileContent(file)));
         });
         chat.userMsg(prompt);
         LOG.info("Executing chat for: {}\n{}", outputRelPath, chat.toJson());
@@ -315,7 +323,7 @@ public class AITask implements Cloneable {
             throw new RuntimeException("Task has to be already run for: " + outputRelPath);
         }
         ChatCompletionBuilder chat = makeChatBuilder(chatBuilderFactory, rootDirectory, outputRelPath);
-        String previousOutput = getFileContent(outputFile);
+        String previousOutput = unclutter(getFileContent(outputFile));
         requireNonNull(previousOutput, "Could not read any content from file " + outputFile);
         chat.assistantMsg(previousOutput);
         chat.userMsg(question);
