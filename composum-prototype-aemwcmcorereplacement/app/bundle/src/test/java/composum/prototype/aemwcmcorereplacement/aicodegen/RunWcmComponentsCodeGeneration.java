@@ -5,6 +5,7 @@ import static composum.prototype.aemwcmcorereplacement.aitasks.AIFileRepository.
 import java.io.File;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,8 @@ public class RunWcmComponentsCodeGeneration {
     }
 
     protected void run() {
-        generateTextModel();
+        // generateTextModel();
+        generateModels();
     }
 
     /**
@@ -83,6 +85,46 @@ public class RunWcmComponentsCodeGeneration {
                 .setPrompt(createJavaPrompt, "MODELCLASS", modelClass)
                 .setOutputFile(javaFile)
                 .execute(this.chatBuilderFactory, ROOT_DIRECTORY);
+    }
+
+    protected final List<String> modelClassesWithMainComponentDir = List.of(
+            // "com.adobe.cq.wcm.core.components.models.Title title/v2/title",
+            // "com.adobe.cq.wcm.core.components.models.Text text/v2/text",
+            "com.adobe.cq.wcm.core.components.models.Separator separator/v1/separator"
+    );
+
+    protected void generateModels() {
+        for (String pair : modelClassesWithMainComponentDir) {
+            String modelCLass = pair.split("\\s+")[0].trim();
+            String componentDir = pair.split("\\s+")[1].trim();
+            File systemMessage = aiPrompts.file("generalsystemmessage.prompt");
+            File componentReadme = jcrContentApps.file("apps/core/wcm/components/" + componentDir + "/README.md");
+            List<File> componentHTL = jcrContentApps.filesContaining("apps/core/wcm/components/", HTML_PATTERN, Pattern.quote(modelCLass), true);
+            if (componentHTL.isEmpty()) {
+                throw new IllegalStateException("No HTL files found for " + modelCLass);
+            }
+            File createSpecPrompt = aiPrompts.file("generateModelAttributeList.md");
+            File specFile = javaDstDir.javaMdFile(modelCLass);
+            AITask createModelDescription = new AITask()
+                    .setSystemMessage(systemMessage)
+                    .addInputFile(componentReadme)
+                    .addInputFiles(componentHTL)
+                    .setPrompt(createSpecPrompt, "MODELCLASS", modelCLass)
+                    .setOutputFile(specFile)
+                    .execute(this.chatBuilderFactory, ROOT_DIRECTORY);
+
+            File parentClassFile = javaScrDir.javaFile("com.adobe.cq.wcm.core.components.models.AbstractComponent");
+            File javaFile = javaDstDir.javaFile(modelCLass);
+            File createJavaPrompt = aiPrompts.file("generateModelClass.md");
+            AITask createJavaClass = new AITask()
+                    .setSystemMessage(systemMessage)
+                    .addInputFiles(componentHTL)
+                    .addInputFile(parentClassFile)
+                    .addInputFile(specFile)
+                    .setPrompt(createJavaPrompt, "MODELCLASS", modelCLass)
+                    .setOutputFile(javaFile)
+                    .execute(this.chatBuilderFactory, ROOT_DIRECTORY);
+        }
     }
 
 }

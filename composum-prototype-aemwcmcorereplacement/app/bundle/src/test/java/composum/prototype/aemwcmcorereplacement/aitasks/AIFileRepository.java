@@ -2,6 +2,7 @@ package composum.prototype.aemwcmcorereplacement.aitasks;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -86,7 +87,7 @@ public class AIFileRepository {
         }
         List<File> result = new ArrayList<>();
         Pattern filePathPattern = filePathRegex != null ? Pattern.compile(filePathRegex) : Pattern.compile(".*");
-        if (recursive) {
+        if (!recursive) {
             File[] files = dir.listFiles((dir1, name) -> filePathPattern.matcher(dir1 + "/" + name).matches());
             Arrays.stream(Objects.requireNonNull(files, dir.toString()))
                     .filter(File::isFile).forEach(result::add);
@@ -103,6 +104,26 @@ public class AIFileRepository {
                 });
             } catch (IOException e) {
                 LOG.error("for " + dir, e);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * All files matching a filePathRegex that contain a pattern.
+     */
+    public List<File> filesContaining(@Nonnull String relpathDirectory, @Nonnull String filePathRegex, @Nonnull String pattern, boolean recursive) {
+        List<File> candidates = files(relpathDirectory, filePathRegex, recursive);
+        List<File> result = new ArrayList<>();
+        Pattern patternPattern = Pattern.compile(pattern);
+        for (File file : candidates) {
+            try {
+                String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+                if (patternPattern.matcher(content).find()) {
+                    result.add(file);
+                }
+            } catch (IOException e) {
+                LOG.error("for " + file, e);
             }
         }
         return result;

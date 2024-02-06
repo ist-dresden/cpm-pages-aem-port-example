@@ -22,7 +22,8 @@ Output a Markdown document with the following information:
 1. The headline "Specification for `MODELCLASS`"
 2. The short description from the README.md
 3. The classname listed in '### Use Object' in the README.md
-4. Output all usages of models with that class in the *.html files.
+4. Output all usages of models with that class in the *.html files - the `data-sly-use` declaration and all expressions
+   where the model is used.
 5. A table with the following columns:
     - `jcr attribute` : the JCR attribute that is returned by the java property, as listed in README.md
     - `java property` : the Java property name as determined from usage as Sling Models model the .html files.
