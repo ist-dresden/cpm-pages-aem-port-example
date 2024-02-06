@@ -88,10 +88,11 @@ public class RunWcmComponentsCodeGeneration {
     }
 
     protected final List<String> modelClassesWithMainComponentDir = List.of(
+            "com.adobe.cq.wcm.core.components.models.Image image/v2/image" /*,
             "com.adobe.cq.wcm.core.components.models.Breadcrumb breadcrumb/v2/breadcrumb",
             "com.adobe.cq.wcm.core.components.models.Title title/v2/title",
             "com.adobe.cq.wcm.core.components.models.Text text/v2/text",
-            "com.adobe.cq.wcm.core.components.models.Separator separator/v1/separator"
+            "com.adobe.cq.wcm.core.components.models.Separator separator/v1/separator" */
     );
 
     protected void generateModels() {
