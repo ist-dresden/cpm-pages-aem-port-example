@@ -42,7 +42,7 @@ public class RunWcmComponentsCodeGeneration {
         try {
             new RunWcmComponentsCodeGeneration().run();
         } finally {
-            LOG.info("Done.");
+            LOG.info("======================== DONE ========================");
         }
     }
 
@@ -88,6 +88,7 @@ public class RunWcmComponentsCodeGeneration {
     }
 
     protected final List<String> modelClassesWithMainComponentDir = List.of(
+            "com.adobe.cq.wcm.core.components.models.Breadcrumb breadcrumb/v2/breadcrumb",
             "com.adobe.cq.wcm.core.components.models.Title title/v2/title",
             "com.adobe.cq.wcm.core.components.models.Text text/v2/text",
             "com.adobe.cq.wcm.core.components.models.Separator separator/v1/separator"
@@ -97,6 +98,11 @@ public class RunWcmComponentsCodeGeneration {
         for (String pair : modelClassesWithMainComponentDir) {
             String modelCLass = pair.split("\\s+")[0].trim();
             String componentDir = pair.split("\\s+")[1].trim();
+            if (javaScrDir.javaFile(modelCLass).exists()) {
+                LOG.info("Skipping " + modelCLass + " - already exists");
+                continue;
+            }
+
             File systemMessage = aiPrompts.file("generalsystemmessage.prompt");
             File componentReadme = jcrContentApps.file("apps/core/wcm/components/" + componentDir + "/README.md");
             List<File> componentHTL = jcrContentApps.filesContaining("apps/core/wcm/components/", HTML_PATTERN, Pattern.quote(modelCLass), true);
@@ -113,12 +119,14 @@ public class RunWcmComponentsCodeGeneration {
                     .setOutputFile(specFile)
                     .execute(this.chatBuilderFactory, ROOT_DIRECTORY);
 
+            // if (0 == 0) return;
+
             File parentClassFile = javaScrDir.javaFile("com.adobe.cq.wcm.core.components.models.AbstractComponent");
             File javaFile = javaDstDir.javaFile(modelCLass);
             File createJavaPrompt = aiPrompts.file("generateModelClass.md");
             AITask createJavaClass = new AITask()
                     .setSystemMessage(systemMessage)
-                    .addInputFiles(componentHTL)
+                    // .addInputFiles(componentHTL)
                     .addInputFile(parentClassFile)
                     .addInputFile(specFile)
                     .setPrompt(createJavaPrompt, "MODELCLASS", modelCLass)

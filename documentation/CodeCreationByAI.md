@@ -57,3 +57,8 @@ TODO: make specific example for model generation.
 - The AITask might just be a wrapper around the ChatCompletionBuilder. This also makes it easy to ask for an
   explanation afterwards, or simply continue the conversation.
 - Admit other AIs than OpenAI. (Local models?)
+
+## TODOs / FIXMEs
+
+- Breadcrumb: breadcrumbitems needs to be implemented.
+- 

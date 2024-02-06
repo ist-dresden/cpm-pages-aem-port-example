@@ -1,4 +1,4 @@
-// AIGenVersion(67dbdfa4d8, generalsystemmessage.prompt-1.0, generateModelClass.md-1.3, text.html-146972031c, text.html-c5e39866f6, AbstractComponent.java-a687d5d32e, Text.md-10742b3ab0)
+// AIGenVersion(19f228d70a, generalsystemmessage.prompt-1.0, generateModelClass.md-1.4, AbstractComponent.java-a687d5d32e, Text.md-2992911859)
 
 package com.adobe.cq.wcm.core.components.models;
 
@@ -8,7 +8,7 @@ import org.apache.sling.models.annotations.Model;
 import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 
 /**
- * Provides the properties for the Text component.
+ * Provides the properties for a Text component.
  */
 @Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class Text extends AbstractComponent {
@@ -31,18 +31,29 @@ public class Text extends AbstractComponent {
     /**
      * Determines if the rendered text is rich text.
      *
-     * @return {@code true} if the text is rich text, otherwise {@code false}
+     * @return true if the text is rich text, false otherwise
      */
     public boolean isRichText() {
         return isRichText;
     }
 
     /**
-     * Returns the data layer JSON.
+     * Returns the component HTML ID attribute.
      *
-     * @return the data layer JSON, or {@code null} if not applicable
+     * @return the component ID
      */
-    public String getDataJson() {
+    @Override
+    public String getId() {
+        return super.getId();
+    }
+
+    /**
+     * Returns the data for data layer integration.
+     * TODO: Implement data layer integration
+     *
+     * @return null as data layer integration is not yet implemented
+     */
+    public Object getData() {
         return null;
     }
 }

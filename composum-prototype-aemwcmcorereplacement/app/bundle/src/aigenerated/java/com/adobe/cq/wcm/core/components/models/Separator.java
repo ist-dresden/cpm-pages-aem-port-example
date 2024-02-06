@@ -1,4 +1,4 @@
-// AIGenVersion(f704beed03, generalsystemmessage.prompt-1.0, generateModelClass.md-1.3, separator.html-bd91b49ac4, AbstractComponent.java-a687d5d32e, Separator.md-30703a8054)
+// AIGenVersion(4023081614, generalsystemmessage.prompt-1.0, generateModelClass.md-1.4, AbstractComponent.java-a687d5d32e, Separator.md-dec09e082e)
 
 package com.adobe.cq.wcm.core.components.models;
 
@@ -17,7 +17,7 @@ public class Separator extends AbstractComponent {
     private boolean isDecorative;
 
     /**
-     * Checks if the separator is decorative.
+     * Returns if the separator is decorative.
      * 
      * @return {@code true} if the separator is decorative, otherwise {@code false}.
      */
