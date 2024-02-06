@@ -118,6 +118,7 @@ public class ChatCompletionBuilder {
      */
     private String extractResponse(String json) {
         ChatCompletionResponse chatCompletionResponse = gson.fromJson(json, ChatCompletionResponse.class);
+        LOG.info("Usage: {}", chatCompletionResponse.usage);
         if (chatCompletionResponse.choices.isEmpty()) {
             throw new IllegalStateException("No choices in response: " + json);
         }
@@ -154,10 +155,26 @@ public class ChatCompletionBuilder {
 
     private static class ChatCompletionResponse {
         List<Choice> choices;
+        Usage usage;
 
         private static class Choice {
             Message message;
             String finish_reason;
+        }
+
+        private static class Usage {
+            int prompt_tokens;
+            int completion_tokens;
+            int total_tokens;
+
+            @Override
+            public String toString() {
+                return "Usage{" +
+                        "prompt_tokens=" + prompt_tokens +
+                        ", completion_tokens=" + completion_tokens +
+                        ", total_tokens=" + total_tokens +
+                        '}';
+            }
         }
     }
 }

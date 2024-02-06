@@ -39,7 +39,7 @@ public class RunWcmComponentsCodeGeneration {
             () -> new ChatCompletionBuilder().model(
                     // "gpt-3.5-turbo-16k"
                     "gpt-4-turbo-preview"
-            );
+            ).maxTokens(2000);
 
     public static void main(String[] args) {
         try {
@@ -91,7 +91,8 @@ public class RunWcmComponentsCodeGeneration {
     }
 
     protected final List<String> modelClassesWithMainComponentDir = List.of(
-            "com.adobe.cq.wcm.core.components.models.Image image/v2/image" /*,
+            "com.adobe.cq.wcm.core.components.models.Teaser teaser/v1/teaser"
+            /* "com.adobe.cq.wcm.core.components.models.Image image/v2/image",
             "com.adobe.cq.wcm.core.components.models.Breadcrumb breadcrumb/v2/breadcrumb",
             "com.adobe.cq.wcm.core.components.models.Title title/v2/title",
             "com.adobe.cq.wcm.core.components.models.Text text/v2/text",
@@ -124,6 +125,8 @@ public class RunWcmComponentsCodeGeneration {
                     .setPrompt(createSpecPrompt, "MODELCLASS", modelCLass)
                     .setOutputFile(specFile)
                     .execute(this.chatBuilderFactory, ROOT_DIRECTORY);
+
+            // if (0 == 0) return;
 
             File parentClassFile = javaScrDir.javaFile("com.adobe.cq.wcm.core.components.models.AbstractComponent");
             File javaFile = javaDstDir.javaFile(modelCLass);

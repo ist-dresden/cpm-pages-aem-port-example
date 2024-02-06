@@ -13,6 +13,7 @@ have a clear implementation should just have a getter returning `null` or - if i
 datatype is a collection - return an empty collection, and (only then!) put a TODO comment there. If you can 
 conclude from the *.html files that a member returns an object collection, define an inner class for those objects,
 except for `.data.json`
+Observe any additional specifications given for the MODELCLASS .
 
 The generated class should satisfy it's usages in the retrieved *.html, which use Apache Sighly / HTL.
 Generate Javadoc comments.
