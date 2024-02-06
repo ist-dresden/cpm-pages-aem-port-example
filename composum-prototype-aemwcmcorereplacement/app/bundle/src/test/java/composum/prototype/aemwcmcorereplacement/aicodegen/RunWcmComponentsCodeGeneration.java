@@ -36,7 +36,10 @@ public class RunWcmComponentsCodeGeneration {
     protected final AIFileRepository javaScrDir = AIFileRepository.fromPath("src/main/java");
 
     protected final Supplier<ChatCompletionBuilder> chatBuilderFactory =
-            () -> new ChatCompletionBuilder().model("gpt-4-turbo-preview");
+            () -> new ChatCompletionBuilder().model(
+                    // "gpt-3.5-turbo-16k"
+                    "gpt-4-turbo-preview"
+            );
 
     public static void main(String[] args) {
         try {
@@ -112,15 +115,15 @@ public class RunWcmComponentsCodeGeneration {
             }
             File createSpecPrompt = aiPrompts.file("generateModelAttributeList.md");
             File specFile = javaDstDir.javaMdFile(modelCLass);
+            File addSpecFile = aiPrompts.file(modelCLass + ".md");
             AITask createModelDescription = new AITask()
                     .setSystemMessage(systemMessage)
                     .addInputFile(componentReadme)
                     .addInputFiles(componentHTL)
+                    .addOptionalInputFile(addSpecFile)
                     .setPrompt(createSpecPrompt, "MODELCLASS", modelCLass)
                     .setOutputFile(specFile)
                     .execute(this.chatBuilderFactory, ROOT_DIRECTORY);
-
-            // if (0 == 0) return;
 
             File parentClassFile = javaScrDir.javaFile("com.adobe.cq.wcm.core.components.models.AbstractComponent");
             File javaFile = javaDstDir.javaFile(modelCLass);
@@ -130,6 +133,7 @@ public class RunWcmComponentsCodeGeneration {
                     // .addInputFiles(componentHTL)
                     .addInputFile(parentClassFile)
                     .addInputFile(specFile)
+                    .addOptionalInputFile(addSpecFile)
                     .setPrompt(createJavaPrompt, "MODELCLASS", modelCLass)
                     .setOutputFile(javaFile)
                     .execute(this.chatBuilderFactory, ROOT_DIRECTORY);

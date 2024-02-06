@@ -1,9 +1,16 @@
 package composum.prototype.aemwcmcorereplacement.simpleOpenAIClient;
 
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +21,8 @@ import com.google.gson.GsonBuilder;
  * creates the corresponding JSON:
  */
 public class ChatCompletionBuilder {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ChatCompletionBuilder.class);
 
     private static final String CHAT_COMPLETION_URL = "https://api.openai.com/v1/chat/completions";
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -74,21 +83,25 @@ public class ChatCompletionBuilder {
      * Calls OpenAI chat completion service and returns the answer.
      */
     public String execute() {
-        java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
-        java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
-                .uri(java.net.URI.create(CHAT_COMPLETION_URL))
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(CHAT_COMPLETION_URL))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + openAiApiKey)
-                .POST(java.net.http.HttpRequest.BodyPublishers.ofString(toJson()))
+                .POST(HttpRequest.BodyPublishers.ofString(toJson()))
                 .build();
+        long start = System.currentTimeMillis();
         try {
-            java.net.http.HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200) {
                 throw new IllegalStateException("Unexpected status code " + response.statusCode() + " from OpenAI: " + response.body());
             }
             return extractResponse(response.body());
         } catch (java.io.IOException | java.lang.InterruptedException e) {
             throw new IllegalStateException("Could not send request to OpenAI", e);
+        } finally {
+            long duration = System.currentTimeMillis() - start;
+            LOG.info("OpenAI request took {} ms", duration);
         }
     }
 
