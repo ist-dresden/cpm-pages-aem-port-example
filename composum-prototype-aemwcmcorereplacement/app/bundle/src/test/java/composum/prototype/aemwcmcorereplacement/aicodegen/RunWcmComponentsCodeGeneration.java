@@ -88,8 +88,8 @@ public class RunWcmComponentsCodeGeneration {
     }
 
     protected final List<String> modelClassesWithMainComponentDir = List.of(
-            // "com.adobe.cq.wcm.core.components.models.Title title/v2/title",
-            // "com.adobe.cq.wcm.core.components.models.Text text/v2/text",
+            "com.adobe.cq.wcm.core.components.models.Title title/v2/title",
+            "com.adobe.cq.wcm.core.components.models.Text text/v2/text",
             "com.adobe.cq.wcm.core.components.models.Separator separator/v1/separator"
     );
 

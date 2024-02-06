@@ -1,4 +1,4 @@
-<!-- AIGenVersion(506b8f147e, generalsystemmessage.prompt-1.0, generateModelAttributeList.md-1.3, README.md-822d35f834, text.html-c5e39866f6) -->
+<!-- AIGenVersion(10742b3ab0, generalsystemmessage.prompt-1.0, generateModelAttributeList.md-1.3, README.md-822d35f834, text.html-146972031c, text.html-c5e39866f6) -->
 
 Specification for `com.adobe.cq.wcm.core.components.models.Text`
 ====
@@ -9,12 +9,13 @@ Text component written in HTL that provides a section of rich text.
 
 ### Usages in *.html files
 - `data-sly-use.textModel="com.adobe.cq.wcm.core.components.models.Text"`
-- `${textModel.text}`
-- `${textModel.isRichText}`
-- `${textModel.data.json}`
-- `${component.id}`
+- Expressions where the model is used:
+  - `${textModel.text}`
+  - `${textModel.isRichText}`
+  - `${textModel.data.json}`
+  - `${component.id}`
 
-### Table of Model Members
+### Table of Members
 
 | JCR Attribute | Java Property | Description                                                                 |
 |---------------|---------------|-----------------------------------------------------------------------------|
